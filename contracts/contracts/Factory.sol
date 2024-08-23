@@ -14,7 +14,7 @@ contract Factory {
     function createSpace(string memory _name) public {
         // can probably change this to a proxy if time allows
         Space space = new Space(msg.sender, _name);
-        spaces[_name] = address(space);
+        spaces[spaceCount] = address(space);
         emit SpaceCreated(spaceCount, address(space));
         spaceCount++;
     }

@@ -10,19 +10,17 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 // space is ownable maybe to add initial invites then  remove ownership later
 contract Space is ERC721, ERC721Enumerable, Ownable {
 
-    public string name;
-
     uint256 public feedCounter;
 
-    mapping(address => bool) public userPoints;
+    mapping(address => uint256) public userPoints;
     mapping(address => uint256) public userPointsLastUpdated;
     
     mapping(uint256 => uint256) public feedPoints;
     mapping(uint256 => uint256) public feedCreatedAt;
+    mapping(uint256 => string) public feedContent;
 
     constructor(address _owner, string memory _name) ERC721(_name, _name)
         Ownable(_owner) {  
-        name = _name;
     }
 
     function inviteUser(address _user) public {
@@ -32,6 +30,7 @@ contract Space is ERC721, ERC721Enumerable, Ownable {
     function addFeed(string memory _content) public {
         // TODO: check if user is owner or have right to mint?
         feedCreatedAt[feedCounter] = block.timestamp;
+        feedContent[feedCounter] = _content;
         _safeMint(msg.sender, feedCounter++);
     }
 
@@ -43,8 +42,8 @@ contract Space is ERC721, ERC721Enumerable, Ownable {
         // TODO: check if user has right to upvote and have enough points?
         updateUserPoints(msg.sender);        
         userPoints[msg.sender] -= 1;
-        updateUserPoints(OwnerOf(_feedId));
-        userPoints[OwnerOf(_feedId)] += 1;
+        updateUserPoints(ownerOf(_feedId));
+        userPoints[ownerOf(_feedId)] += 1;
     }
 
      function _baseURI() internal pure override returns (string memory) {
@@ -56,8 +55,9 @@ contract Space is ERC721, ERC721Enumerable, Ownable {
     }
 
     // A fnction for the UI to get all infos about one feed
-    function getFeed(uint256 _feedId) public view returns (string memory, address _owner)) {
+    function getFeed(uint256 _feedId) public view returns (string memory _content, address _owner, uint256 _createdAt, uint256 _points) {
         // TODO: check if user is owner or have right to get the feed?
+        return (feedContent[_feedId], ownerOf(_feedId), feedCreatedAt[_feedId], feedPoints[_feedId]);
     }
 
 // The following functions are overrides required by Solidity.
