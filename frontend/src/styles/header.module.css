@@ -1,5 +1,6 @@
 .header {
     background-color: white;
+    width: 100%;
 }
 
 .nav {
@@ -10,6 +11,8 @@
     max-width: 1200px;
     margin: 0 auto;
     gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .logInWrapper {

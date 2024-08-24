@@ -19,7 +19,7 @@ const Body = (props) => {
     const [didUserVote, setDidUserVote] = useState(false);
     const [userRank, setUserRank] = useState("");
 
-    const ranks =[
+    const ranks = [
         "No membership",
         "Invited",
         "Not ranked",
@@ -28,7 +28,7 @@ const Body = (props) => {
         "Advanced",
         "Expert",
         "Master"
-      ]
+    ]
 
     const formatAddress = (ad) => {
         if (ad.length > 8) {
@@ -49,7 +49,7 @@ const Body = (props) => {
     }
 
     async function checkIfUserVoted(address) {
-        if (address == null) 
+        if (address == null)
             return;
         const didUserVote = await readContract(config, {
             abi,
@@ -72,22 +72,35 @@ const Body = (props) => {
             <div className={styles.names}>
                 <h3>{props.feedItem.content}</h3>
                 <div className={styles.questionMeta}>
-                    Posted by <b>{userRank}</b> {formatAddress(props.feedItem.owner)} 
+                    Posted by <b>{userRank}</b> {formatAddress(props.feedItem.owner)}
                 </div>
                 <div className={styles.questionMeta}>
                     Posted at <Moment fromNow>{props.feedItem.createdAt * 1000}</Moment>
                 </div>
             </div>
             <div className={styles.iconButtons}>
-                <UpvoteButton alreadyVoted={didUserVote || address == props.feedItem.owner} id={props.feedItem.id} item={props.feedItem} onSuccess={props.loadFeed} />
-                <a id="clickable"><span className={styles.voteCount}>{props.feedItem.score}</span></a><Tooltip anchorSelect="#clickable" clickable> <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span>Upvotes: {props.feedItem.upvotes}</span>
-                    <span>Downvotes: {props.feedItem.downvotes}</span>
-                </div></Tooltip>
-                <DownVoteButton alreadyVoted={didUserVote || address == props.feedItem.owner} id={props.feedItem.id} item={props.feedItem} onSuccess={props.loadFeed} />
+                <UpvoteButton
+                    alreadyVoted={didUserVote || address === props.feedItem.owner}
+                    id={props.feedItem.id}
+                    item={props.feedItem}
+                    onSuccess={props.loadFeed}
+                />
+                <a id={`clickable-upvote-${props.feedItem.id}`}>
+                    <span className={styles.voteCount}>{props.feedItem.upvoteScore}</span>
+                </a>
+                <DownVoteButton
+                    alreadyVoted={didUserVote || address === props.feedItem.owner}
+                    id={props.feedItem.id}
+                    item={props.feedItem}
+                    onSuccess={props.loadFeed}
+                />
+                <a id={`clickable-downvote-${props.feedItem.id}`}>
+                    <span className={styles.voteCount}>{props.feedItem.downvoteScore}</span>
+                </a>
             </div>
         </div>
     );
+
 };
 
 export default Body;

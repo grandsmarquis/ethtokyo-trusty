@@ -53,6 +53,8 @@ const Body = () => {
         upvotes: parseInt(result.result.upvotes),
         downvotes: parseInt(result.result.downvotes),
         createdAt: parseInt(result.result.createdAt),
+        upvoteScore: parseInt(result.result.upvotes),
+        downvoteScore: parseInt(result.result.downvotes),
         score: parseInt(result.result.upvotes) - parseInt(result.result.downvotes),
         id: i++,
       };

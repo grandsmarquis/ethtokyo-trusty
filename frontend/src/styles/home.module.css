@@ -2,5 +2,22 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-color: #f0f4f8;
+    width: 100%;
 }
+
+.main {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 500px) {
+    .main {
+        padding: 1rem;
+    }
+}
+
+/* 他のスタイルは変更なし */
