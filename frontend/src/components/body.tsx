@@ -22,6 +22,26 @@ const Body: React.FC = () => {
   const [feedLoading, setFeedLoading] = useState(false);
   const [feedCount, setFeedCount] = useState(0);
 
+  async function upvote(id: number) {
+    try {
+      let tx = await writeContract(config, {
+        abi,
+        address: addresses.Space,
+        functionName: 'upvote',
+        args: [id],
+      });
+      setIsSendingTx(true);
+      const transactionReceipt = await waitForTransactionReceipt(config, {
+        hash: tx,
+      })
+      setIsSendingTx(false);
+      loadFeed();
+    } catch (error) {
+      setIsSendingTx(false);
+      alert(error.message);
+    }
+  }
+
   async function loadFeed() {
     let count = await readContract(
       config,
@@ -90,6 +110,7 @@ const Body: React.FC = () => {
         console.log(error);
         alert(error.message);
       }
+      loadFeed();
     }
   };
 
