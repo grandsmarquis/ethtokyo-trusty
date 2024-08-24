@@ -10,8 +10,7 @@ import Moment from 'react-moment';
 import { Tooltip } from 'react-tooltip'
 import { useAccount } from 'wagmi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faXmark, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 import UpvoteButton from './upvoteButton';
 import DownVoteButton from './downvoteButton';
@@ -101,8 +100,8 @@ const Body = (props) => {
                     <span className={styles.voteCount}>{props.feedItem.downvotes}</span>
                 </a>
                 <FontAwesomeIcon
-                    icon={props.feedItem.score > 0 ? faCheck : faXmark}
-                    style={{ fontSize: '30px', margin: '0px 20px', color: props.feedItem.score > 0 ? 'green' : 'red' }}
+                    icon={props.feedItem.score > 0 ? faCheck : props.feedItem.score < 0 ? faXmark : faMinus}
+                    style={{ fontSize: '25px', margin: '0px 20px', color: props.feedItem.score > 0 ? 'green' : props.feedItem.score < 0 ? 'red' : 'grey' }}
                 />
             </div>
         </div>
