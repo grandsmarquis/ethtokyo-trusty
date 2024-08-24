@@ -55,9 +55,9 @@ contract Space is ERC721, ERC721Enumerable, Ownable {
     }
 
     // A fnction for the UI to get all infos about one feed
-    function getFeed(uint256 _feedId) public view returns (string memory _content, address _owner, uint256 _createdAt, uint256 _points) {
+    function getFeed(uint256 _feedId) public view returns (string memory _content, address _owner, uint256 _createdAt, uint256 _upvotes, uint256 _ownerPoints) {
         // TODO: check if user is owner or have right to get the feed?
-        return (feedContent[_feedId], ownerOf(_feedId), feedCreatedAt[_feedId], feedPoints[_feedId]);
+        return (feedContent[_feedId], ownerOf(_feedId), feedCreatedAt[_feedId], feedPoints[_feedId], userPoints[ownerOf(_feedId)]);
     }
 
 // The following functions are overrides required by Solidity.
