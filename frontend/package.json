@@ -1,0 +1,30 @@
+{
+  "name": "my-rainbowkit-app",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "@rainbow-me/rainbowkit": "^2.1.5",
+    "@tanstack/react-query": "^5.51.11",
+    "ether": "^0.0.9",
+    "moment": "^2.30.1",
+    "next": "^14.2.3",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "react-moment": "^1.1.3",
+    "react-tooltip": "^5.28.0",
+    "viem": "2.17.0",
+    "wagmi": "^2.12.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.3",
+    "@types/react": "^18.3.0",
+    "typescript": "5.4.2"
+  }
+}
