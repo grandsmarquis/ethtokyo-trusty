@@ -1,5 +1,4 @@
 import styles from '../styles/body.module.css';
-import { useAccount } from 'wagmi';
 import { useState, useEffect } from 'react';
 import { config } from '../wagmi';
 import addresses from '../addresses.json';
@@ -14,7 +13,6 @@ import SubmitModal from './submitModal';
 import FeedItem from './feedItem';
 
 const Body = () => {
-  const account = useAccount();
   const [showPopup, setShowPopup] = useState(false);
   const [isSendingTx, setIsSendingTx] = useState(false);
 
@@ -74,7 +72,6 @@ const Body = () => {
   return (
     <main className={styles.main}>
       <SubmitModal onSuccess={loadFeed} />
-
       <div className={styles.questionBox}>
         <div className={styles.questions}>
           {feed.slice().reverse().map((feedItem) => (

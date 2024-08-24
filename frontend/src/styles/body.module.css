@@ -17,9 +17,9 @@
 }
 
 .questionBox {
-  background-color: white;
+  background-color: rgb(255, 255, 255);
   border-radius: 8px;
-  width: calc(400px + (400 * (100vw - 500px) / 1200));
+  width: calc(350px + (450 * (100vw - 500px) / 1200));
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -40,6 +40,7 @@
 .question h3 {
   margin: 0 0 0.5rem 0;
   font-size: 1rem;
+  max-width: 400px;
 }
 
 .questionMeta {
@@ -105,16 +106,22 @@
   width: 100%;
 }
 
-.names {
-  /* 必要ならスタイルを追加 */
+@media(max-width: 1000px) {
+  .info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .iconButtons {
+    margin-top: 10px;
+  }
 }
 
-/* styles/body.module.css */
 .voteSection .iconButton .fa-thumbs-up {
   display: inline-block !important;
 }
 
-/* styles/body.module.css */
 .iconButton svg {
   display: inline-block !important;
   z-index: 1000;
@@ -175,4 +182,9 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+.disabledButton {
+  color: gray;
+  cursor: not-allowed;
 }

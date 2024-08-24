@@ -2,12 +2,15 @@ import styles from '../styles/body.module.css';
 
 import { useState, useEffect } from 'react';
 import { config } from '../wagmi';
+
 import addresses from '../addresses.json';
 import abi from '../abi.json';
 import { readContract } from '@wagmi/core';
 import Moment from 'react-moment';
 import { Tooltip } from 'react-tooltip'
 import { useAccount } from 'wagmi';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faXmark, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 import UpvoteButton from './upvoteButton';
 import DownVoteButton from './downvoteButton';
@@ -16,6 +19,18 @@ const Body = (props) => {
 
     const { address, isConnected } = useAccount();
     const [didUserVote, setDidUserVote] = useState(false);
+    const [userRank, setUserRank] = useState("");
+
+    const ranks = [
+        "No membership",
+        "Invited",
+        "Not ranked",
+        "Novice",
+        "Intermediate",
+        "Advanced",
+        "Expert",
+        "Master"
+    ]
 
     const formatAddress = (ad) => {
         if (ad.length > 8) {
@@ -24,8 +39,19 @@ const Body = (props) => {
         return ad;
     };
 
+
+    async function getUserInfos() {
+        const userInfos = await readContract(config, {
+            abi,
+            address: addresses.Space,
+            functionName: 'getUser',
+            args: [address],
+        });
+        setUserRank(ranks[parseInt(userInfos.rank)]);
+    }
+
     async function checkIfUserVoted(address) {
-        if (address == null) 
+        if (address == null)
             return;
         const didUserVote = await readContract(config, {
             abi,
@@ -38,6 +64,7 @@ const Body = (props) => {
     }
 
     useEffect(() => {
+        getUserInfos();
         checkIfUserVoted(address);
     }, [address]);
 
@@ -47,22 +74,39 @@ const Body = (props) => {
             <div className={styles.names}>
                 <h3>{props.feedItem.content}</h3>
                 <div className={styles.questionMeta}>
-                    Posted by {formatAddress(props.feedItem.owner)}
+                    Posted by <b>{userRank}</b> {formatAddress(props.feedItem.owner)}
                 </div>
                 <div className={styles.questionMeta}>
                     Posted at <Moment fromNow>{props.feedItem.createdAt * 1000}</Moment>
                 </div>
             </div>
             <div className={styles.iconButtons}>
-                <UpvoteButton alreadyVoted={didUserVote} id={props.feedItem.id} item={props.feedItem} onSuccess={props.loadFeed} />
-                <a id="clickable"><span className={styles.voteCount}>{props.feedItem.score}</span></a><Tooltip anchorSelect="#clickable" clickable> <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span>Upvotes: {props.feedItem.upvotes}</span>
-                    <span>Downvotes: {props.feedItem.downvotes}</span>
-                </div></Tooltip>
-                <DownVoteButton alreadyVoted={didUserVote} id={props.feedItem.id} item={props.feedItem} onSuccess={props.loadFeed} />
+                <UpvoteButton
+                    alreadyVoted={didUserVote || address === props.feedItem.owner}
+                    id={props.feedItem.id}
+                    item={props.feedItem}
+                    onSuccess={props.loadFeed}
+                />
+                <a id={`clickable-upvote-${props.feedItem.id}`}>
+                    <span className={styles.voteCount}>{props.feedItem.upvotes}</span>
+                </a>
+                <DownVoteButton
+                    alreadyVoted={didUserVote || address === props.feedItem.owner}
+                    id={props.feedItem.id}
+                    item={props.feedItem}
+                    onSuccess={props.loadFeed}
+                />
+                <a id={`clickable-downvote-${props.feedItem.id}`}>
+                    <span className={styles.voteCount}>{props.feedItem.downvotes}</span>
+                </a>
+                <FontAwesomeIcon
+                    icon={props.feedItem.score > 0 ? faCheck : props.feedItem.score < 0 ? faXmark : faMinus}
+                    style={{ fontSize: '25px', margin: '0px 20px', color: props.feedItem.score > 0 ? 'green' : props.feedItem.score < 0 ? 'red' : 'grey' }}
+                />
             </div>
         </div>
     );
+
 };
 
 export default Body;
