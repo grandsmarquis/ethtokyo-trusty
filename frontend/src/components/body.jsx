@@ -20,7 +20,7 @@ const Body = () => {
   const [feedLoading, setFeedLoading] = useState(false);
   const [feedCount, setFeedCount] = useState(0);
 
-  function indexToId(number) {
+  function indexToId(index) {
     return index;
   }
 
@@ -34,6 +34,7 @@ const Body = () => {
       }
     );
     setFeedCount(parseInt(count));
+    count = 1;
     let multiquery = [];
     for (let i = 0; i < count; i++) {
       multiquery.push(
@@ -49,14 +50,15 @@ const Body = () => {
     let results = await readContracts(config, {
       contracts: multiquery
     });
-
+    console.log(results);
     let f = results.map((result) => {
       return {
-        content: result.result[0],
-        owner: result.result[1],
-        createdAt: parseInt(result.result[2]),
-        voteCount: parseInt(result.result[3]),
-        userPoints: parseInt(result.result[4]),
+        content: result.result.content,
+        owner: result.result.owner,
+        upvotes: parseInt(result.result.upvotes),
+        downvotes: parseInt(result.result.downvotes),
+        createdAt: parseInt(result.result.createdAt),
+        score:  parseInt(result.result.upvotes) - parseInt(result.result.downvotes),
       };
     });
     setFeed(f);
