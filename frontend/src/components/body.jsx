@@ -6,6 +6,10 @@ import addresses from '../addresses.json';
 import abi from '../abi.json';
 import { writeContract, readContract, readContracts, waitForTransactionReceipt } from '@wagmi/core';
 import Moment from 'react-moment';
+import 'react-tooltip/dist/react-tooltip.css'
+import { Tooltip } from 'react-tooltip'
+
+
 
 import UpvoteButton from './upvoteButton';
 import DownVoteButton from './downvoteButton';
@@ -54,7 +58,7 @@ const Body = () => {
         upvotes: parseInt(result.result.upvotes),
         downvotes: parseInt(result.result.downvotes),
         createdAt: parseInt(result.result.createdAt),
-        score:  parseInt(result.result.upvotes) - parseInt(result.result.downvotes),
+        score: parseInt(result.result.upvotes) - parseInt(result.result.downvotes),
         id: i++,
       };
     });
@@ -70,7 +74,7 @@ const Body = () => {
 
 
 
- 
+
 
   useEffect(() => {
     loadFeed();
@@ -82,36 +86,36 @@ const Body = () => {
 
   return (
     <main className={styles.main}>
-    <SubmitModal onSuccess={loadFeed} />
+      <SubmitModal onSuccess={loadFeed} />
 
-    <div className={styles.questionBox}>
-      <div className={styles.questions}>
-        {feed.slice().reverse().map((feedItem) => (
-          <div key={feedItem.id} className={styles.question}>
-            <div className={styles.info}>
-              <div className={styles.names}>
-                <h3>{feedItem.content}</h3>
-                <div className={styles.questionMeta}>
-                  Posted by {formatAddress(feedItem.owner)}
+      <div className={styles.questionBox}>
+        <div className={styles.questions}>
+          {feed.slice().reverse().map((feedItem) => (
+            <div key={feedItem.id} className={styles.question}>
+              <div className={styles.info}>
+                <div className={styles.names}>
+                  <h3>{feedItem.content}</h3>
+                  <div className={styles.questionMeta}>
+                    Posted by {formatAddress(feedItem.owner)}
+                  </div>
+                  <div className={styles.questionMeta}>
+                    Posted at <Moment fromNow>{feedItem.createdAt * 1000}</Moment>
+                  </div>
                 </div>
-                <div className={styles.questionMeta}>
-                  Posted at <Moment fromNow>{feedItem.createdAt * 1000}</Moment>
+                <div className={styles.iconButtons}>
+                  <UpvoteButton id={feedItem.id} item={feedItem} onSuccess={loadFeed} />
+                  <a id="clickable"><span className={styles.voteCount}>{feedItem.score}</span></a><Tooltip anchorSelect="#clickable" clickable> <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span>Upvotes: {feedItem.upvotes}</span>
+                    <span>Downvotes: {feedItem.downvotes}</span>
+                  </div></Tooltip>
+                  <DownVoteButton id={feedItem.id} item={feedItem} onSuccess={loadFeed} />
                 </div>
-              </div>
-              <div className={styles.iconButtons}>
-                <UpvoteButton id={feedItem.id} item={feedItem} onSuccess={loadFeed} />
-                <span className={styles.voteCount}>{feedItem.score}</span>
-                <DownVoteButton id={feedItem.id} item={feedItem} onSuccess={loadFeed} />
               </div>
             </div>
-          </div>
-        ))}
-      </div>
-      <div className={styles.loadMore}>
-        <button>Load More</button>
-      </div>
-    </div >
-  </main >
+          ))}
+        </div>
+      </div >
+    </main >
   );
 };
 
