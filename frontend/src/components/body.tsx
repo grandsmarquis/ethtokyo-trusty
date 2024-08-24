@@ -14,8 +14,8 @@ const Body: React.FC = () => {
   const [inputText, setInputText] = useState('');
   const [questions, setQuestions] = useState([
     "Did the Snapshot proposal with the id",
-    "Will Pepe have over a $1 Billion dollar market cap on 4/20/2024?",
-    "Qué puntuación darías del 1 al 3 a la reunión de hoy?"
+    "Will Pepe have over a $1 Billion ",
+    "Qué puntuación darías del 1 al 3 ?"
   ]);
 
   const [feed, setFeed] = useState([]);
@@ -90,7 +90,6 @@ const Body: React.FC = () => {
         console.log(error);
         alert(error.message);
       }
-
     }
   };
 
