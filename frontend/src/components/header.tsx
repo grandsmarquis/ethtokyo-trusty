@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import '@rainbow-me/rainbowkit/styles.css';
 import styles from '../styles/header.module.css';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useState, useEffect } from 'react';
@@ -7,6 +8,12 @@ import { useAccount } from 'wagmi';
 const Header: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
   const { address, isConnected } = useAccount();
+
+  useEffect(() => {
+    if (address != null) {
+      console.log(address);
+    }
+  }, [address]);
 
   return (
     <div>

@@ -36,15 +36,15 @@ const Body: React.FC = (props) => {
     }
 
     return (
-        <div>
+        <span>
             {isSendingTx && <button style={{ marginRight: '10px' }}>Sending</button>}
             {!isSendingTx &&  
                 <button
                   className={styles.iconButton}
                 >
-                  <FontAwesomeIcon icon={faThumbsDown} />
+               👎
                 </button> }
-        </div>
+        </span>
     );
 };
 

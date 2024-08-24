@@ -90,7 +90,7 @@ const Body: React.FC = () => {
                 <div className={styles.names}>
                   <h3>{feedItem.content}</h3>
                   <div className={styles.questionMeta}>
-                    Posted by {formatAddress(feedItem.owner)}
+                    Posted by {formatAddress(feedItem.owner)} <Moment fromNow>{feedItem.createdAt * 1000}</Moment>
                   </div>
                 </div>
                 <div className={styles.iconButtons}>
@@ -105,9 +105,9 @@ const Body: React.FC = () => {
         <div className={styles.loadMore}>
           <button>Load More</button>
         </div>
-      </div>
+      </div >
 
-    </main>
+    </main >
   );
 };
 
