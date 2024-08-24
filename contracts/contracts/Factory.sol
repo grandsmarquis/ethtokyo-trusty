@@ -11,9 +11,9 @@ contract Factory {
 
     uint256 public spaceCount;
 
-    function createSpace(string memory _name, string memory _symbol) public {
+    function createSpace(address _owner, address rankFunction, string calldata _name, string calldata _symbol) external {
         // can probably change this to a proxy if time allows
-        Space space = new Space(msg.sender, _name, _symbol);
+        Space space = new Space(_owner, rankFunction, _name, _symbol);
         spaces[spaceCount] = address(space);
         emit SpaceCreated(spaceCount, address(space));
         spaceCount++;

@@ -26,8 +26,16 @@ contract Space is ISpace, ERC721Enumerable, Ownable {
     mapping(uint256 => uint256) public feedCreatedAt;
     mapping(uint256 => string) public feedContent;
 
-    constructor(address _owner, string memory _name, string memory _symbol) ERC721(_name, _symbol)
-        Ownable(_owner) {  
+    constructor(address _owner, address rankFunction, string memory _name, string memory _symbol) ERC721(_name, _symbol)
+        Ownable(_owner) 
+    {
+        // require(masters.length == 0, "At least one master required");
+
+        // for (uint256 i; i < masters.length; i++) {
+        //     users[masters[i]] = UserDetails(0, 0, Rank.MASTER, block.timestamp, address(this));
+        // }
+
+        _config.rankFunction = IRankFunction(rankFunction);
     }
 
     function getConfig() external view returns (Config memory) {
@@ -64,16 +72,6 @@ contract Space is ISpace, ERC721Enumerable, Ownable {
         _safeMint(msg.sender, feedId);
     }
 
-    function downvote(uint256 _feedId) external verifyRankToVote {
-        if (didUserVote[msg.sender][_feedId]) {
-            revert("UserDetails already voted for this feed");
-        }
-
-        _feeds[_feedId].downvotes += 1;
-
-        didUserVote[msg.sender][_feedId] = true;
-    }
-
     function upvote(uint256 _feedId) external verifyRankToVote {
         if (didUserVote[msg.sender][_feedId]) {
             revert("UserDetails already voted for this feed");
@@ -88,15 +86,25 @@ contract Space is ISpace, ERC721Enumerable, Ownable {
             _highestUpvoterRank[feed.owner] = users[msg.sender].rank;
         }
 
+        users[msg.sender].points++;
+
+        didUserVote[msg.sender][_feedId] = true;
+    }
+
+    function downvote(uint256 _feedId) external verifyRankToVote {
+        if (didUserVote[msg.sender][_feedId]) {
+            revert("UserDetails already voted for this feed");
+        }
+
+        _feeds[_feedId].downvotes += 1;
+
+        users[msg.sender].points--;
+
         didUserVote[msg.sender][_feedId] = true;
     }
 
      function _baseURI() internal pure override returns (string memory) {
         return "https://apitogetimageofnft?id=";
-    }
-
-    function updateUserPoints(address _user) public {
-        // update the decaying of the users points using userPointsLastUpdated and the percent per zeek?
     }
 
     function getFeedCount() public view returns (uint256) {
