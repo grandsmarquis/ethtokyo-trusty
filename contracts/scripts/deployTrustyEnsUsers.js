@@ -11,7 +11,7 @@ async function main() {
     let ensUserDeployment = await hre.ethers.deployContract("TrustyEnsUsers", [
         "0x0635513f179D50A207757E05759CbD106d7dFcE8", // L1EnsResolver
         "0x8FADE66B79cC9f707aB26799354482EB93a5B7dD", // PublicResolver
-        "0x62f41adad055fba070cfb5e35669b2e7be7f3981f6babb6eb8dfa994bd426be3" // trusty.eth Root ENS node
+        "0x1e818c10bc1d950567c8af1be6943e079f87df9a57c67c67403ab663e62edd34" // trusty.eth Root ENS node
     ]);
     await ensUserDeployment.waitForDeployment();
     console.log("✅ Deployed TrustyEnsUsers at:", ensUserDeployment.target);

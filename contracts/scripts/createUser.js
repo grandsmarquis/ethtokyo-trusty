@@ -2,8 +2,8 @@ const hre = require("hardhat");
 
 async function main() {
     console.log("⏳ Registering user");
-    let ensUserDeployment = await hre.ethers.getContractAt("EnsUser", "0x15a5e0Eb61B33b7af0285227D6753A0c318c7967");
-    let tx = await ensUserDeployment.registerUser("mytestname");
+    let ensUserDeployment = await hre.ethers.getContractAt("TrustyEnsUsers", "0xE37881258A5c1dA765a3566F7D2A3EE7f91B8264");
+    let tx = await ensUserDeployment.registerUser("pipip");
 
     await tx.wait();
     console.log("✅ Registered user");

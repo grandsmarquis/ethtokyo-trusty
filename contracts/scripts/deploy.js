@@ -9,7 +9,7 @@ const hre = require("hardhat");
 async function main() {
     console.log("⏳ Deploying L1EnsResolver contract");
     let l1EnsResolverDeployment = await hre.ethers.deployContract("L1EnsResolver", [
-        "0x15a5e0Eb61B33b7af0285227D6753A0c318c7967", // TrustyEnsUser
+        "0xE37881258A5c1dA765a3566F7D2A3EE7f91B8264", // TrustyEnsUser
         "0x0635513f179D50A207757E05759CbD106d7dFcE8", // NameWrapper
     ]);
     await l1EnsResolverDeployment.waitForDeployment();
@@ -17,8 +17,6 @@ async function main() {
 
     console.log("node id:", await l1EnsResolverDeployment.getNodeId("0x6F824B3439F522D7A37DE290aAb800993EeaF32D"));
     console.log("username:", await l1EnsResolverDeployment.getAddressUsername("0x6F824B3439F522D7A37DE290aAb800993EeaF32D"));
-    console.log("username:", await l1EnsResolverDeployment._retrieveSlotFromL1("0x15a5e0Eb61B33b7af0285227D6753A0c318c7967", "93187982417923737308899198249154879998230177608241762305889175894456250657999"));
-
 
     console.log("⏳ Deploying BasicRankFunction contract");
     let rankDeployment = await hre.ethers.deployContract("BasicRankFunction", []);
@@ -41,7 +39,7 @@ async function main() {
             "0xBAC78374F87D02d3b0d6FAf82d8794201D40b35B",
         ],
         rankAddress,
-        "Trusty DAO"
+        "LvlUP DAO"
     ]
 
     let spaceAddress = await factoryDeployment.createSpace.staticCall(

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.24;
 
 /**
@@ -8,7 +8,7 @@ pragma solidity 0.8.24;
 contract L1EnsResolver {
     address constant L1_SLOAD_ADDRESS = 0x0000000000000000000000000000000000000101;
 
-    uint256 constant NODE_ID_SLOT = 1;
+    uint256 constant NODE_ID_SLOT = 0;
     uint256 constant NAMES_SLOT = 6;
 
     /// @notice The address of the TrustyEnsUser contract on L1
