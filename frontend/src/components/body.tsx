@@ -8,18 +8,12 @@ import { writeContract, readContract, readContracts, waitForTransactionReceipt }
 import Moment from 'react-moment';
 import UpvoteButton from './upvoteButton';
 import DisputeButton from './disputeButton';
+import SubmitModal from './submitModal';
 
 const Body: React.FC = () => {
   const account = useAccount();
   const [showPopup, setShowPopup] = useState(false);
   const [isSendingTx, setIsSendingTx] = useState(false);
-  const [itemForTx, setItemForTx] = useState(null);
-  const [inputText, setInputText] = useState('');
-  const [questions, setQuestions] = useState([
-    "Did the Snapshot proposal with the id",
-    "Will Pepe have over a $1 Billion ",
-    "Qué puntuación darías del 1 al 3 ?"
-  ]);
 
   const [feed, setFeed] = useState([]);
   const [feedLoading, setFeedLoading] = useState(false);
@@ -68,38 +62,9 @@ const Body: React.FC = () => {
     console.log(results);
   }
 
-  const handleSubmit = () => {
-    setShowPopup(true);
-  };
 
-  const handleSend = async () => {
-    if (inputText.trim()) {
-      try {
-        const result = await writeContract(config, {
-          abi,
-          address: addresses.Space,
-          functionName: 'addFeed',
-          args: [
-            inputText
-          ],
-        });
-        console.log(result);
-        setIsSendingTx(true);
-        const transactionReceipt = await waitForTransactionReceipt(config, {
-          hash: result,
-        });
-        setIsSendingTx(false);
-        setQuestions([inputText, ...questions]);
-        setInputText('');
-        setShowPopup(false);
-      } catch (error) {
-        setIsSendingTx(false);
-        console.error(error);
-        alert(error.message);
-      }
-      loadFeed();
-    }
-  };
+
+ 
 
   useEffect(() => {
     loadFeed();
@@ -107,22 +72,7 @@ const Body: React.FC = () => {
 
   return (
     <main className={styles.main}>
-      <button className={styles.askButton} onClick={handleSubmit}>Submit</button>
-
-      {showPopup && (
-        <div className={styles.popup}>
-          <div className={styles.popupContent}>
-            <h2>What did you do?</h2>
-            <textarea
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              className={styles.textInput}
-            />
-            {isSendingTx && <p>Sending transaction...</p>}
-            {!isSendingTx && <p><button onClick={handleSend} className={styles.sendButton}>Send</button></p>}
-          </div>
-        </div>
-      )}
+      <SubmitModal onSuccess={loadFeed} />
 
       <div className={styles.questionBox}>
         <div className={styles.questions}>
