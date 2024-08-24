@@ -1,4 +1,4 @@
-import styles from '../styles/Home.module.css';
+import styles from '../styles/body.module.css';
 import { useAccount } from 'wagmi';
 import { useState } from 'react';
 import { writeContract, waitForTransactionReceipt } from '@wagmi/core';
