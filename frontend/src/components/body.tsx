@@ -7,6 +7,8 @@ import abi from '../abi.json';
 import { writeContract, readContract, readContracts, waitForTransactionReceipt } from '@wagmi/core';
 import Moment from 'react-moment';
 import UpvoteButton from './upvoteButton';
+import DisputeButton from './disputeButton';
+
 const Body: React.FC = () => {
   const account = useAccount();
   const [showPopup, setShowPopup] = useState(false);
@@ -134,7 +136,7 @@ const Body: React.FC = () => {
               </div>
               <div>
                 <UpvoteButton id={indexToId(i)} item={feedItem} onSuccess={loadFeed} />
-                <button>dispute</button>
+                <DisputeButton id={indexToId(i)} item={feedItem} onSuccess={loadFeed} />
               </div>
             </div>
           ))}
