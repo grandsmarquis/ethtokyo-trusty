@@ -6,6 +6,9 @@ import addresses from '../addresses.json';
 import abi from '../abi.json';
 import { writeContract, readContract, readContracts, waitForTransactionReceipt } from '@wagmi/core';
 import Moment from 'react-moment';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
+
 const Body: React.FC = () => {
   const account = useAccount();
   const [showPopup, setShowPopup] = useState(false);
@@ -32,7 +35,7 @@ const Body: React.FC = () => {
       setIsSendingTx(true);
       const transactionReceipt = await waitForTransactionReceipt(config, {
         hash: tx,
-      })
+      });
       setIsSendingTx(false);
       loadFeed();
     } catch (error) {
@@ -118,6 +121,10 @@ const Body: React.FC = () => {
     loadFeed();
   }, []);
 
+  const handleUpvote = async (id: number) => {
+    await upvote(id);
+  };
+
   return (
     <main className={styles.main}>
       <button className={styles.askButton} onClick={handleSubmit}>Submit</button>
@@ -144,12 +151,22 @@ const Body: React.FC = () => {
               <div>
                 <h3>{feedItem.content}</h3>
                 <div className={styles.questionMeta}>
-                  Posted <Moment fromNow>{feedItem.createdAt * 1000}</Moment> · Reward: 0 ETH
+                  Posted by {feedItem.owner}
                 </div>
               </div>
-              <div>
-                <button style={{ marginRight: '10px' }}>yes</button>
-                <button>dispute</button>
+              <div className={styles.voteSection}>
+                <button
+                  className={styles.iconButton}
+                  onClick={() => handleUpvote(i)}
+                >
+                  <FontAwesomeIcon icon={faThumbsUp} />
+                </button>
+                <span className={styles.voteCount}>{feedItem.voteCount}</span>
+                <button
+                  className={styles.iconButton}
+                >
+                  <FontAwesomeIcon icon={faThumbsDown} />
+                </button>
               </div>
             </div>
           ))}
@@ -158,7 +175,7 @@ const Body: React.FC = () => {
           <button>Load More</button>
         </div>
       </div>
-    </main >
+    </main>
   );
 };
 

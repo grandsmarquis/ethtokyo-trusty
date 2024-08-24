@@ -8,6 +8,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@rainbow-me/rainbowkit": "^2.1.5",
     "@tanstack/react-query": "^5.51.11",
     "ether": "^0.0.9",

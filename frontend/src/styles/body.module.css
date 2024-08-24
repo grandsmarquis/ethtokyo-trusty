@@ -97,3 +97,16 @@
   border-radius: 4px;
   cursor: pointer;
 }
+
+.iconButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: black;
+  margin: 0 10px;
+}
+
+.iconButton:hover {
+  color: #0070f3;
+}
