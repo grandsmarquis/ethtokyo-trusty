@@ -1,4 +1,4 @@
-equire("@nomicfoundation/hardhat-toolbox");
+require("@nomicfoundation/hardhat-toolbox");
 
 require("dotenv").config();
 
