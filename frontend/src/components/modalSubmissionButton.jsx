@@ -1,9 +1,7 @@
-import { useAccount } from 'wagmi';
 import { Modal } from 'react-responsive-modal';
 import { useState } from 'react';
 import 'react-responsive-modal/styles.css';
 import styles from '../styles/body.module.css';
-
 
 
 const Body= () => {

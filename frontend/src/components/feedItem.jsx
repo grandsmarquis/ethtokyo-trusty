@@ -32,6 +32,13 @@ const Body = (props) => {
         "Master"
     ]
 
+    const displayName = (ad, username) => {
+        if (username) {
+            return username;
+        }
+        return formatAddress(ad);
+    }
+
     const formatAddress = (ad) => {
         if (ad.length > 8) {
             return `${ad.slice(0, 6)}...${ad.slice(-6)}`;
@@ -39,8 +46,12 @@ const Body = (props) => {
         return ad;
     };
 
-
     async function getUserInfos() {
+        if (address == null) {
+            setUserRank(ranks[0]);
+            return;
+        }
+        
         const userInfos = await readContract(config, {
             abi,
             address: addresses.Space,
@@ -74,7 +85,7 @@ const Body = (props) => {
             <div className={styles.names}>
                 <h3>{props.feedItem.content}</h3>
                 <div className={styles.questionMeta}>
-                    Posted by <b>{userRank}</b> {formatAddress(props.feedItem.owner)}
+                    Posted by <b>{userRank}</b> {displayName(props.feedItem.owner, props.feedItem.username)}
                 </div>
                 <div className={styles.questionMeta}>
                     Posted at <Moment fromNow>{props.feedItem.createdAt * 1000}</Moment>
@@ -97,7 +108,7 @@ const Body = (props) => {
                     onSuccess={props.loadFeed}
                 />
                 <a id={`clickable-downvote-${props.feedItem.id}`}>
-                    <span className={styles.voteCount}>{props.feedItem.downvotes}</span>
+                    <span className={styles.voteCount}>{props.feedItem.downvotes > 0 ? "-" : ""}{props.feedItem.downvotes}</span>
                 </a>
                 <FontAwesomeIcon
                     icon={props.feedItem.score > 0 ? faCheck : props.feedItem.score < 0 ? faXmark : faMinus}
