@@ -33,17 +33,18 @@ struct Feed {
     string content;
 }
 
-interface ISpace {
-    function updateRankFunction(IRankFunction _rankFunction) external;
-    function highestUpvoterRank(address _user) external view returns (Rank);
-    function getFeed(uint256 feedId) external view returns (Feed memory);
-    function getFeedCount() external view returns (uint256);
+interface ITrustySpace {
+    function name() external view returns (string memory);
+    function getConfig() external view returns (Config memory);
     function getUser(address user) external view returns (UserDetails memory);
     function getUserPoints(address user) external view returns (int256 points);
     function getUserMultiplier(address user) external view returns (uint256);
-    function getConfig() external view returns (Config memory);
     function didUserVote(address user, uint256 feedId) external view returns (bool);
-    function name() external view returns (string memory);
+    function highestUpvoterRank(address _user) external view returns (Rank);
+    function getFeed(uint256 feedId) external view returns (Feed memory);
+    function getFeedCount() external view returns (uint256);
+
+    function updateRankFunction(IRankFunction _rankFunction) external;
     function inviteUser(address _user) external;
     function register() external;
     function addFeed(string memory _content) external;
