@@ -89,6 +89,29 @@
   padding: 0.5rem;
 }
 
+.info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.names {
+  /* 必要ならスタイルを追加 */
+}
+
+/* styles/body.module.css */
+.voteSection .iconButton .fa-thumbs-up {
+  display: inline-block !important;
+}
+
+/* styles/body.module.css */
+.iconButton svg {
+  display: inline-block !important;
+  z-index: 1000;
+  position: relative;
+}
+
 .sendButton {
   background-color: #3498db;
   color: white;
@@ -98,15 +121,28 @@
   cursor: pointer;
 }
 
+.iconButtons {
+  display: flex;
+  align-items: center;
+  /* 垂直方向の中央揃え */
+  margin-left: 0;
+  /* 不要なmarginを削除 */
+}
+
 .iconButton {
   background: transparent;
   border: none;
   cursor: pointer;
   font-size: 24px;
   color: black;
-  margin: 0 10px;
+  z-index: 99999;
 }
 
 .iconButton:hover {
   color: #0070f3;
+}
+
+.voteCount {
+  margin-left: 3px;
+  margin-right: 10px;
 }
