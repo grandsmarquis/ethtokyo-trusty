@@ -1,10 +1,16 @@
 import styles from '../styles/body.module.css';
 import { useAccount } from 'wagmi';
 import { useState } from 'react';
+import { config } from '../wagmi';
+import addresses from '../addresses.json';
+import abi from '../abi.json';
+import { writeContract, waitForTransactionReceipt } from '@wagmi/core'
+
 
 const Body: React.FC = () => {
   const account = useAccount();
   const [showPopup, setShowPopup] = useState(false);
+  const [isSendingTx, setIsSendingTx] = useState(false);
   const [inputText, setInputText] = useState('');
   const [questions, setQuestions] = useState([
     "Did the Snapshot proposal with the id",
@@ -16,12 +22,32 @@ const Body: React.FC = () => {
     setShowPopup(true);
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (inputText.trim()) {
       // 新しい質問をリストの先頭に追加
-      setQuestions([inputText, ...questions]);
-      setInputText('');
-      setShowPopup(false);
+      try {
+        const result = await writeContract(config, {
+          abi,
+          address: addresses.Space,
+          functionName: 'addFeed',
+          args: [
+            inputText
+          ],
+        });
+        console.log(result);
+        setIsSendingTx(true);
+        const transactionReceipt = await waitForTransactionReceipt(config, {
+          hash: result,
+        })
+        setIsSendingTx(false);
+        setQuestions([inputText, ...questions]);
+        setInputText('');
+        setShowPopup(false);
+      } catch (error) {
+        console.log(error);
+        alert(error.message);
+      }
+     
     }
   };
 
@@ -38,7 +64,8 @@ const Body: React.FC = () => {
               onChange={(e) => setInputText(e.target.value)}
               className={styles.textInput}
             />
-            <button onClick={handleSend} className={styles.sendButton}>Send</button>
+            {isSendingTx && <p>Sending transaction...</p>}
+            {!isSendingTx && <p> <button onClick={handleSend} className={styles.sendButton}>Send</button></p>}
           </div>
         </div>
       )}
