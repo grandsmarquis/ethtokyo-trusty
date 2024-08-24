@@ -18,7 +18,7 @@ struct Global {
 }
 
 struct UserDetails {
-    uint256 points;
+    int256 points;
     uint256 voteCount;
     Rank rank;
     uint256 lastUpdated;

@@ -38,12 +38,12 @@ const Body = (props) => {
     return (
         <span>
             {isSendingTx && <button style={{ marginRight: '10px' }}>Sending</button>}
-            {!isSendingTx &&  
+            {!isSendingTx &&
                 <button
-                  className={styles.iconButton}
+                    className={styles.iconButton}
                 >
-               👎
-                </button> }
+                    <FontAwesomeIcon icon={faThumbsDown}></FontAwesomeIcon>
+                </button>}
         </span>
     );
 };

@@ -6,26 +6,33 @@
 // global scope, and execute the script.
 const hre = require("hardhat");
 
-let factorydeployment
-
-async function createFactory(name) {
-    console.log("⏳ Creating factory", name);
-    pending = await factorydeployment.createSpace("TestSpace", "TSP");
-    await pending.wait();
-    console.log("✅ Created space", name);
-}
-
 async function main() {
 
     const [main, otherAccount] = await hre.ethers.getSigners();
+    console.log("⏳ Deploying Rank Function contract");
+    let rankDeployment = await hre.ethers.deployContract("BasicRankFunction", []);
+    await rankDeployment.waitForDeployment();
+    console.log("✅ Deployed rank function at:", rankDeployment.target)
 
-    console.log("⏳ Deploying Staking")
-    factorydeployment = await hre.ethers.deployContract("Factory", []);
-    await factorydeployment.waitForDeployment();
-    console.log("✅ Deployed factory at:", factorydeployment.target)
+    console.log("⏳ Deploying Factory contract");
+    let factoryDeployment = await hre.ethers.deployContract("Factory", []);
+    await factoryDeployment.waitForDeployment();
+    console.log("✅ Deployed factory at:", factoryDeployment.target)
 
-    await createFactory("Space 1");
-    // await createFactory("Space 2");
+    console.log("⏳ Creating space", "TestSpace");
+    let pending = await factoryDeployment.createSpace(
+        "0xBF7B8616e86332BEDdF987C25306e9aF9FF96674",
+        // [
+        //     "0xBF7B8616e86332BEDdF987C25306e9aF9FF96674",
+        //     "0x84c03c2F60A472568eAd8E5CA58B641F5785ae30",
+        //     "0xC7Ce6bfe1E69e58557a21Ad6E832d26cA8FB03AE",
+        // ],
+        (await rankDeployment.getAddress()),
+        "TestSpace",
+        "TSP"
+    );
+    await pending.wait();
+    console.log("✅ Created space", "TestSpace");
 }
 
 // We recommend this pattern to be able to use async/await everywhere
