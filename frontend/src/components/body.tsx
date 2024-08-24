@@ -38,6 +38,7 @@ const Body: React.FC = () => {
       loadFeed();
     } catch (error) {
       setIsSendingTx(false);
+      console.error(error);
       alert(error.message);
     }
   }
@@ -108,7 +109,7 @@ const Body: React.FC = () => {
         setShowPopup(false);
       } catch (error) {
         setIsSendingTx(false);
-        console.log(error);
+        console.error(error);
         alert(error.message);
       }
       loadFeed();
