@@ -13,13 +13,13 @@ const Body = (props) => {
 
     const [isSendingTx, setIsSendingTx] = useState(false);
 
-    async function upvote(id) {
+    async function downvote(id) {
         console.log(id)
         try {
             let tx = await writeContract(config, {
                 abi,
                 address: addresses.Space,
-                functionName: 'challengeFeed',
+                functionName: 'downvote',
                 args: [parseInt(props.id)],
             });
             setIsSendingTx(true);
@@ -40,7 +40,7 @@ const Body = (props) => {
             {isSendingTx && <button style={{ marginRight: '10px' }}>Sending</button>}
             {!isSendingTx &&
                 <button
-                    className={styles.iconButton}
+                    className={styles.iconButton} onClick={() => downvote(props.id)}
                 >
                     <FontAwesomeIcon icon={faThumbsDown}></FontAwesomeIcon>
                 </button>}

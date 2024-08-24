@@ -72,9 +72,6 @@ const Body = () => {
   };
 
 
-
-
-
   useEffect(() => {
     loadFeed();
   }, []);
