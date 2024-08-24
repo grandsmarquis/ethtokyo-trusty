@@ -14,7 +14,18 @@ const Header = () => {
   const [isHovered, setIsHovered] = useState(false);
   const { address, isConnected } = useAccount();
   const [userInfos, setUserInfos] = useState(null);
+  const [name, setName] = useState("");
 
+  const ranks =[
+    "No membership",
+    "Invited",
+    "Not ranked",
+    "Novice",
+    "Intermediate",
+    "Advanced",
+    "Expert",
+    "Master"
+  ]
   async function loadUser() {
     console.log(address);
     let userInfos = await readContract(config, {
@@ -24,23 +35,39 @@ const Header = () => {
       args: [address],
     });
     console.log(userInfos);
+    setUserInfos({
+      rank: ranks[parseInt(userInfos.rank)],
+      points: parseInt(userInfos.points),
+      voteCount: parseInt(userInfos.voteCount),
+    });
+  }
+
+  async function getName() {
+    let name = await readContract(config, {
+      abi: abi,
+      address: addresses.Space,
+      functionName: 'name',
+      args: [],
+    });
+    setName(name);
   }
   useEffect(async => {
+    getName();
     if (address != null) {
-      // loadUser();
+      loadUser();
     }
   }, [address]);
 
   return (
     <div>
       <Head>
-        <title>ETH Tokyo 24</title>
+        <title>{name}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <header className={styles.header}>
         <nav className={styles.nav}>
-          <div className={styles.logo}>ETH Tokyo 24</div>
+          <div className={styles.logo}>{name}</div>
           <div
             className={styles.logInWrapper}
             onMouseEnter={() => setIsHovered(true)}

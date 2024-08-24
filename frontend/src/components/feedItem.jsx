@@ -2,6 +2,7 @@ import styles from '../styles/body.module.css';
 
 import { useState, useEffect } from 'react';
 import { config } from '../wagmi';
+
 import addresses from '../addresses.json';
 import abi from '../abi.json';
 import { readContract } from '@wagmi/core';
@@ -16,6 +17,18 @@ const Body = (props) => {
 
     const { address, isConnected } = useAccount();
     const [didUserVote, setDidUserVote] = useState(false);
+    const [userRank, setUserRank] = useState("");
+
+    const ranks =[
+        "No membership",
+        "Invited",
+        "Not ranked",
+        "Novice",
+        "Intermediate",
+        "Advanced",
+        "Expert",
+        "Master"
+      ]
 
     const formatAddress = (ad) => {
         if (ad.length > 8) {
@@ -23,6 +36,17 @@ const Body = (props) => {
         }
         return ad;
     };
+
+
+    async function getUserInfos() {
+        const userInfos = await readContract(config, {
+            abi,
+            address: addresses.Space,
+            functionName: 'getUser',
+            args: [address],
+        });
+        setUserRank(ranks[parseInt(userInfos.rank)]);
+    }
 
     async function checkIfUserVoted(address) {
         if (address == null) 
@@ -38,6 +62,7 @@ const Body = (props) => {
     }
 
     useEffect(() => {
+        getUserInfos();
         checkIfUserVoted(address);
     }, [address]);
 
@@ -47,19 +72,19 @@ const Body = (props) => {
             <div className={styles.names}>
                 <h3>{props.feedItem.content}</h3>
                 <div className={styles.questionMeta}>
-                    Posted by {formatAddress(props.feedItem.owner)}
+                    Posted by <b>{userRank}</b> {formatAddress(props.feedItem.owner)} 
                 </div>
                 <div className={styles.questionMeta}>
                     Posted at <Moment fromNow>{props.feedItem.createdAt * 1000}</Moment>
                 </div>
             </div>
             <div className={styles.iconButtons}>
-                <UpvoteButton alreadyVoted={didUserVote} id={props.feedItem.id} item={props.feedItem} onSuccess={props.loadFeed} />
+                <UpvoteButton alreadyVoted={didUserVote || address == props.feedItem.owner} id={props.feedItem.id} item={props.feedItem} onSuccess={props.loadFeed} />
                 <a id="clickable"><span className={styles.voteCount}>{props.feedItem.score}</span></a><Tooltip anchorSelect="#clickable" clickable> <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <span>Upvotes: {props.feedItem.upvotes}</span>
                     <span>Downvotes: {props.feedItem.downvotes}</span>
                 </div></Tooltip>
-                <DownVoteButton alreadyVoted={didUserVote} id={props.feedItem.id} item={props.feedItem} onSuccess={props.loadFeed} />
+                <DownVoteButton alreadyVoted={didUserVote || address == props.feedItem.owner} id={props.feedItem.id} item={props.feedItem} onSuccess={props.loadFeed} />
             </div>
         </div>
     );

@@ -50,7 +50,7 @@ const Body = (props) => {
 
     return (
         <div>
-            <button className={styles.askButton} onClick={handleSubmit}>Submit</button>
+            <button className={styles.askButton} onClick={handleSubmit}>Post your activity</button>
             {showPopup &&
                 <div className={styles.popup}>
                     <div className={styles.popupContent}>
