@@ -11,12 +11,11 @@ contract Factory {
 
     uint256 public spaceCount;
 
-    function createSpace(string memory _name) public {
+    function createSpace(string memory _name, string memory _symbol) public {
         // can probably change this to a proxy if time allows
-        Space space = new Space(msg.sender, _name);
+        Space space = new Space(msg.sender, _name, _symbol);
         spaces[spaceCount] = address(space);
         emit SpaceCreated(spaceCount, address(space));
         spaceCount++;
     }
-
 }
