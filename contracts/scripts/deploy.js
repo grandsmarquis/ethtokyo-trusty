@@ -15,9 +15,9 @@ async function main() {
     await l1EnsResolverDeployment.waitForDeployment();
     console.log("✅ Deployed L1EnsResolver at:", l1EnsResolverDeployment.target);
 
-    // console.log("node id:", await l1EnsResolverDeployment.getNodeId("0x6F824B3439F522D7A37DE290aAb800993EeaF32D"));
-    // console.log("username:", await l1EnsResolverDeployment.getAddressUsername("0x6F824B3439F522D7A37DE290aAb800993EeaF32D"));
-    // console.log("username:", await l1EnsResolverDeployment._retrieveSlotFromL1("0x15a5e0Eb61B33b7af0285227D6753A0c318c7967", "93187982417923737308899198249154879998230177608241762305889175894456250657999"));
+    console.log("node id:", await l1EnsResolverDeployment.getNodeId("0x6F824B3439F522D7A37DE290aAb800993EeaF32D"));
+    console.log("username:", await l1EnsResolverDeployment.getAddressUsername("0x6F824B3439F522D7A37DE290aAb800993EeaF32D"));
+    console.log("username:", await l1EnsResolverDeployment._retrieveSlotFromL1("0x15a5e0Eb61B33b7af0285227D6753A0c318c7967", "93187982417923737308899198249154879998230177608241762305889175894456250657999"));
 
 
     console.log("⏳ Deploying BasicRankFunction contract");

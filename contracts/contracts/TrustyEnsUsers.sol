@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.24;
 
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
@@ -40,5 +40,11 @@ contract TrustyEnsUsers is ERC1155Holder {
         resolver.setAddr(subNodeId, 60, abi.encodePacked(msg.sender));
 
         subNodes[msg.sender] = subNodeId;
+    }
+
+    function setAvatar(string calldata path) external {
+        require(subNodes[msg.sender] != 0, "User not registered");
+
+        resolver.setText(subNodes[msg.sender], "avatar", path);
     }
 }
