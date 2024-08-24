@@ -46,6 +46,7 @@ const Body = () => {
       contracts: multiquery
     });
     console.log(results);
+    let i = 0;
     let f = results.map((result) => {
       return {
         content: result.result.content,
@@ -54,10 +55,18 @@ const Body = () => {
         downvotes: parseInt(result.result.downvotes),
         createdAt: parseInt(result.result.createdAt),
         score:  parseInt(result.result.upvotes) - parseInt(result.result.downvotes),
+        id: i++,
       };
     });
     setFeed(f);
   }
+
+  const formatAddress = (address) => {
+    if (address.length > 8) {
+      return `${address.slice(0, 6)}...${address.slice(-6)}`;
+    }
+    return address;
+  };
 
 
 
@@ -73,41 +82,36 @@ const Body = () => {
 
   return (
     <main className={styles.main}>
-      <SubmitModal onSuccess={loadFeed} />
+    <SubmitModal onSuccess={loadFeed} />
 
-      <div className={styles.questionBox}>
-        <div className={styles.questions}>
-
-          {feed.slice().reverse().map((feedItem) => (
-            <div key={feedItem.id} className={styles.question}>
-              <div className={styles.info}>
-                <div className={styles.names}>
-                  <h3>{feedItem.content}</h3>
-                  <div className={styles.questionMeta}>
-                    Posted by {formatAddress(feedItem.owner)}
-                  </div>
-                  <div className={styles.questionMeta}>
-                    Posted at <Moment fromNow>{feedItem.createdAt * 1000}</Moment>
-                  </div>
+    <div className={styles.questionBox}>
+      <div className={styles.questions}>
+        {feed.slice().reverse().map((feedItem) => (
+          <div key={feedItem.id} className={styles.question}>
+            <div className={styles.info}>
+              <div className={styles.names}>
+                <h3>{feedItem.content}</h3>
+                <div className={styles.questionMeta}>
+                  Posted by {formatAddress(feedItem.owner)}
                 </div>
-                <div className={styles.iconButtons}>
-                  <UpvoteButton id={feedItem.id} item={feedItem} onSuccess={loadFeed} />
-                  <span className={styles.voteCount}>{feedItem.voteCount}</span>
-                  <DisputeButton id={feedItem.id} item={feedItem} onSuccess={loadFeed} />
+                <div className={styles.questionMeta}>
+                  Posted at <Moment fromNow>{feedItem.createdAt * 1000}</Moment>
                 </div>
-
-                <span className={styles.voteCount}>{feedItem.voteCount}</span>
-               
-                <UpvoteButton id={indexToId(i)} item={feedItem} onSuccess={loadFeed} />
-                <DownVoteButton id={indexToId(i)} item={feedItem} onSuccess={loadFeed} />
+              </div>
+              <div className={styles.iconButtons}>
+                <UpvoteButton id={feedItem.id} item={feedItem} onSuccess={loadFeed} />
+                <span className={styles.voteCount}>{feedItem.score}</span>
+                <DownVoteButton id={feedItem.id} item={feedItem} onSuccess={loadFeed} />
               </div>
             </div>
-          ))}
-        </div>
-
+          </div>
+        ))}
       </div>
-      
-    </main>
+      <div className={styles.loadMore}>
+        <button>Load More</button>
+      </div>
+    </div >
+  </main >
   );
 };
 
