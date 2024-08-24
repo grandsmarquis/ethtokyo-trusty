@@ -102,7 +102,7 @@ const Body = (props) => {
                 </a>
                 <FontAwesomeIcon
                     icon={props.feedItem.score > 0 ? faCheck : faXmark}
-                    style={{ margin: '0px 20px', color: props.feedItem.score > 0 ? 'green' : 'red' }}
+                    style={{ fontSize: '30px', margin: '0px 20px', color: props.feedItem.score > 0 ? 'green' : 'red' }}
                 />
             </div>
         </div>
