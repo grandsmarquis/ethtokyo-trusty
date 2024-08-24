@@ -44,7 +44,7 @@ const Body = (props) => {
             functionName: 'getUser',
             args: [address],
         });
-        console.log(userInfos);
+        setUserRank(ranks[parseInt(userInfos.rank)]);
     }
 
     async function checkIfUserVoted(address) {
@@ -71,7 +71,7 @@ const Body = (props) => {
             <div className={styles.names}>
                 <h3>{props.feedItem.content}</h3>
                 <div className={styles.questionMeta}>
-                    Posted by {formatAddress(props.feedItem.owner)} <bold>{userRank}</bold>
+                    Posted by <b>{userRank}</b> {formatAddress(props.feedItem.owner)} 
                 </div>
                 <div className={styles.questionMeta}>
                     Posted at <Moment fromNow>{props.feedItem.createdAt * 1000}</Moment>
