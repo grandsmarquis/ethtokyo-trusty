@@ -8,16 +8,16 @@ import abi from '../abi.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 
-
 const Body = (props) => {
 
     const [isSendingTx, setIsSendingTx] = useState(false);
+    const [showTooltip, setShowTooltip] = useState(false); // Tooltip用の状態
 
     async function downvote(id) {
         if (props.alreadyVoted) {
             return;
         }
-        console.log(id)
+        console.log(id);
         try {
             let tx = await writeContract(config, {
                 abi,
@@ -28,7 +28,7 @@ const Body = (props) => {
             setIsSendingTx(true);
             const transactionReceipt = await waitForTransactionReceipt(config, {
                 hash: tx,
-            })
+            });
             props.onSuccess();
         } catch (error) {
             setIsSendingTx(false);
@@ -40,13 +40,26 @@ const Body = (props) => {
 
     return (
         <span>
-            {isSendingTx && <button style={{ marginRight: '10px' }}>Sending</button>}
-            {!isSendingTx &&
-                <button
-                    className={styles.iconButton} onClick={() => downvote(props.id)}
+            {isSendingTx ? (
+                <div className={styles.loader}></div>
+            ) : (
+                <div
+                    className={styles.voteSection}
+                    onMouseEnter={() => props.alreadyVoted && setShowTooltip(true)}
+                    onMouseLeave={() => setShowTooltip(false)}
                 >
-                    <FontAwesomeIcon icon={faThumbsDown}></FontAwesomeIcon>
-                </button>}
+                    <button
+                        className={`${styles.iconButton} ${props.alreadyVoted ? styles.disabledButton : ''}`}
+                        onClick={() => downvote(Number(props.id))}
+                        disabled={props.alreadyVoted}
+                    >
+                        <FontAwesomeIcon icon={faThumbsDown}></FontAwesomeIcon>
+                    </button>
+                    {showTooltip && props.alreadyVoted && (
+                        <div className={styles.tooltipText}>You have already voted</div>
+                    )}
+                </div>
+            )}
         </span>
     );
 };

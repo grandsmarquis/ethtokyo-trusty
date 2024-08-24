@@ -76,11 +76,10 @@ const Header = () => {
             <ConnectButton />
             {isConnected && isHovered && (
               <div className={styles.popup}>
-                <p>Name: Ryota Kyoya</p>
-                <p>Reputation Score: </p>
-                <div className={styles.meterContainer}>
-                  <div className={styles.meterFill} style={{ width: '50% ' }}></div>
-                  <div className={styles.meterDivisions}></div>
+                <div className={styles.popupContents}>
+                  <p className={styles.popupText}>Repute Score : 30</p>
+                  <p className={styles.popupText}>Rank : Novice</p>
+                  <p className={styles.popupText}>Voting Power : 30</p>
                 </div>
               </div>
             )}
