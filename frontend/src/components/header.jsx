@@ -15,6 +15,16 @@ const Header = () => {
   const { address, isConnected } = useAccount();
   const [userInfos, setUserInfos] = useState(null);
 
+  const ranks =[
+    "No membership",
+    "Invited",
+    "Not ranked",
+    "Novice",
+    "Intermediate",
+    "Advanced",
+    "Expert",
+    "Master"
+  ]
   async function loadUser() {
     console.log(address);
     let userInfos = await readContract(config, {
@@ -24,10 +34,15 @@ const Header = () => {
       args: [address],
     });
     console.log(userInfos);
+    setUserInfos({
+      rank: ranks[parseInt(userInfos.rank)],
+      points: parseInt(userInfos.points),
+      voteCount: parseInt(userInfos.voteCount),
+    });
   }
   useEffect(async => {
     if (address != null) {
-      // loadUser();
+      loadUser();
     }
   }, [address]);
 
