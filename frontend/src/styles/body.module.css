@@ -105,6 +105,12 @@
   font-size: 24px;
   color: black;
   margin: 0 10px;
+  display: var(--fa-display, inline-block);
+    height: 1em;
+    overflow: visible;
+    vertical-align: -0.125em;
+    overflow: visible;
+    box-sizing: content-box;
 }
 
 .iconButton:hover {

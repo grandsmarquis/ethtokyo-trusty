@@ -36,16 +36,16 @@ const Body: React.FC = (props) => {
     }
 
     return (
-        <div>
+        <span>
             {isSendingTx && <button style={{ marginRight: '10px' }}>Sending</button>}
             {!isSendingTx &&               <div className={styles.voteSection}>
                 <button
                   className={styles.iconButton}
                   onClick={() => upvote(props.id)}
                 >
-                  <FontAwesomeIcon icon={faThumbsUp} />
+                 👍 
                 </button></div>}
-        </div>
+        </span>
     );
 };
 
