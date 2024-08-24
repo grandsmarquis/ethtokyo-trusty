@@ -17,7 +17,7 @@ const Header: React.FC = () => {
 
       <header className={styles.header}>
         <nav className={styles.nav}>
-          <div className={styles.logo}>ETH Tokyo 24</div>
+          <div className={styles.logo}>ETH Tsssokyaao 24</div>
           <div
             className={styles.logInWrapper}
             onMouseEnter={() => setIsHovered(true)}

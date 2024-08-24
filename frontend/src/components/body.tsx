@@ -1,36 +1,59 @@
-import styles from '../styles/Home.module.css';
+import styles from '../styles/body.module.css';
 import { useAccount } from 'wagmi';
+import { useState } from 'react';
 
 const Body: React.FC = () => {
   const account = useAccount();
+  const [showPopup, setShowPopup] = useState(false);
+  const [inputText, setInputText] = useState('');
+  const [questions, setQuestions] = useState([
+    "Did the Snapshot proposal with the id",
+    "Will Pepe have over a $1 Billion dollar market cap on 4/20/2024?",
+    "Qué puntuación darías del 1 al 3 a la reunión de hoy?"
+  ]);
+
+  const handleSubmit = () => {
+    setShowPopup(true);
+  };
+
+  const handleSend = () => {
+    if (inputText.trim()) {
+      // 新しい質問をリストの先頭に追加
+      setQuestions([inputText, ...questions]);
+      setInputText('');
+      setShowPopup(false);
+    }
+  };
 
   return (
     <main className={styles.main}>
-      <button className={styles.askButton}>Submit</button>
+      <button className={styles.askButton} onClick={handleSubmit}>Submit</button>
+
+      {showPopup && (
+        <div className={styles.popup}>
+          <div className={styles.popupContent}>
+            <h2>What did you do?</h2>
+            <textarea
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              className={styles.textInput}
+            />
+            <button onClick={handleSend} className={styles.sendButton}>Send</button>
+          </div>
+        </div>
+      )}
 
       <div className={styles.questionBox}>
-        {/* <div className={styles.tabs}>
-          <button className={`${styles.tab} ${styles.activeTab}`}>Open</button>
-          <button className={styles.tab}>Upcoming</button>
-          <button className={styles.tab}>Resolved</button>
-        </div> */}
         <div className={styles.questions}>
-          {[...Array(5)].map((_, i) => (
+          {questions.map((question, i) => (
             <div key={i} className={styles.question}>
-              <h3>
-                {i < 3
-                  ? `Did the Snapshot proposal with the id `
-                  : i === 3
-                  ? "Will Pepe have over a $1 Billion dollar market cap on 4/20/2024?"
-                  : "Qué puntuación darías del 1 al 3 a la reunión de hoy?"}
-              </h3>
+              <h3>{question}</h3>
               <div className={styles.questionMeta}>
-                Posted {i === 0 ? "10 months" : "1 year"} ago · Reward: 0 ETH
+                Posted {i === 0 ? "Just now" : i < 5 ? "A moment ago" : "Some time ago"} · Reward: 0 ETH
               </div>
             </div>
           ))}
         </div>
-
         <div className={styles.loadMore}>
           <button>Load More</button>
         </div>

@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import styles from '../styles/Header.module.css';
+import styles from '../styles/header.module.css';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useState, useEffect } from 'react';
 import { useAccount } from 'wagmi';
