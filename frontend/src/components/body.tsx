@@ -107,6 +107,7 @@ const Body: React.FC = () => {
         setInputText('');
         setShowPopup(false);
       } catch (error) {
+        setIsSendingTx(false);
         console.log(error);
         alert(error.message);
       }
