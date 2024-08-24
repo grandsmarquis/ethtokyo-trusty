@@ -181,3 +181,9 @@
   color: gray;
   cursor: not-allowed;
 }
+
+.tooltipText {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
