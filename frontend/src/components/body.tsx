@@ -1,10 +1,10 @@
 import styles from '../styles/body.module.css';
 import { useAccount } from 'wagmi';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { config } from '../wagmi';
 import addresses from '../addresses.json';
 import abi from '../abi.json';
-import { writeContract, waitForTransactionReceipt } from '@wagmi/core'
+import { writeContract, readContract, readContracts, waitForTransactionReceipt } from '@wagmi/core'
 
 
 const Body: React.FC = () => {
@@ -17,6 +17,38 @@ const Body: React.FC = () => {
     "Will Pepe have over a $1 Billion dollar market cap on 4/20/2024?",
     "Qué puntuación darías del 1 al 3 a la reunión de hoy?"
   ]);
+
+  const [feed, setFeed] = useState([]);
+  const [feedLoading, setFeedLoading] = useState(false);
+  const [feedCount, setFeedCount] = useState(0);
+
+  async function loadFeed() {
+    let count = await readContract(
+      config,
+      {
+        abi,
+        address: addresses.Space,
+        functionName: 'feedCounter',
+      }
+    )
+    setFeedCount(count);
+    let multiquery = []
+    for (let i = 0; i < count; i++) {
+      multiquery.push(
+        {
+          abi,
+          address: addresses.Space,
+          functionName: 'getFeed',
+          args: [i],
+        }
+      );
+    }
+    console.log(multiquery);
+    let results = await readContracts(config, {
+      contracts: multiquery
+    });
+    console.log(results);
+  }
 
   const handleSubmit = () => {
     setShowPopup(true);
@@ -47,9 +79,13 @@ const Body: React.FC = () => {
         console.log(error);
         alert(error.message);
       }
-     
+
     }
   };
+
+  useEffect(() => {
+    loadFeed();
+  }, []);
 
   return (
     <main className={styles.main}>
