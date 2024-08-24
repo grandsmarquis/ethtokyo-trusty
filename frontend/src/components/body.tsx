@@ -6,10 +6,12 @@ import addresses from '../addresses.json';
 import abi from '../abi.json';
 import { writeContract, readContract, readContracts, waitForTransactionReceipt } from '@wagmi/core';
 import Moment from 'react-moment';
+import UpvoteButton from './upvoteButton';
 const Body: React.FC = () => {
   const account = useAccount();
   const [showPopup, setShowPopup] = useState(false);
   const [isSendingTx, setIsSendingTx] = useState(false);
+  const [itemForTx, setItemForTx] = useState(null);
   const [inputText, setInputText] = useState('');
   const [questions, setQuestions] = useState([
     "Did the Snapshot proposal with the id",
@@ -21,25 +23,8 @@ const Body: React.FC = () => {
   const [feedLoading, setFeedLoading] = useState(false);
   const [feedCount, setFeedCount] = useState(0);
 
-  async function upvote(id: number) {
-    try {
-      let tx = await writeContract(config, {
-        abi,
-        address: addresses.Space,
-        functionName: 'upvote',
-        args: [id],
-      });
-      setIsSendingTx(true);
-      const transactionReceipt = await waitForTransactionReceipt(config, {
-        hash: tx,
-      })
-      setIsSendingTx(false);
-      loadFeed();
-    } catch (error) {
-      setIsSendingTx(false);
-      console.error(error);
-      alert(error.message);
-    }
+  function indexToId(index) {
+    return feedCount - index - 1;
   }
 
   async function loadFeed() {
@@ -51,7 +36,7 @@ const Body: React.FC = () => {
         functionName: 'feedCounter',
       }
     );
-    setFeedCount(count);
+    setFeedCount(parseInt(count));
     let multiquery = [];
     for (let i = 0; i < count; i++) {
       multiquery.push(
@@ -148,7 +133,7 @@ const Body: React.FC = () => {
                 </div>
               </div>
               <div>
-                <button style={{ marginRight: '10px' }}>yes</button>
+                <UpvoteButton id={indexToId(i)} item={feedItem} onSuccess={loadFeed} />
                 <button>dispute</button>
               </div>
             </div>
