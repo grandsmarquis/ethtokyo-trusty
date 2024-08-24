@@ -9,6 +9,9 @@ import { readContract } from '@wagmi/core';
 import Moment from 'react-moment';
 import { Tooltip } from 'react-tooltip'
 import { useAccount } from 'wagmi';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 import UpvoteButton from './upvoteButton';
 import DownVoteButton from './downvoteButton';
@@ -86,7 +89,7 @@ const Body = (props) => {
                     onSuccess={props.loadFeed}
                 />
                 <a id={`clickable-upvote-${props.feedItem.id}`}>
-                    <span className={styles.voteCount}>{props.feedItem.upvoteScore}</span>
+                    <span className={styles.voteCount}>{props.feedItem.upvotes}</span>
                 </a>
                 <DownVoteButton
                     alreadyVoted={didUserVote || address === props.feedItem.owner}
@@ -95,8 +98,12 @@ const Body = (props) => {
                     onSuccess={props.loadFeed}
                 />
                 <a id={`clickable-downvote-${props.feedItem.id}`}>
-                    <span className={styles.voteCount}>{props.feedItem.downvoteScore}</span>
+                    <span className={styles.voteCount}>{props.feedItem.downvotes}</span>
                 </a>
+                <FontAwesomeIcon
+                    icon={props.feedItem.score > 0 ? faCheck : faXmark}
+                    style={{ margin: '0px 20px', color: props.feedItem.score > 0 ? 'green' : 'red' }}
+                />
             </div>
         </div>
     );
