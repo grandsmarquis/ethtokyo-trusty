@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react';
 import { config } from '../wagmi';
 import addresses from '../addresses.json';
 import abi from '../abi.json';
-import { writeContract, readContract, readContracts, waitForTransactionReceipt } from '@wagmi/core'
-
+import { writeContract, readContract, readContracts, waitForTransactionReceipt } from '@wagmi/core';
 
 const Body: React.FC = () => {
   const account = useAccount();
@@ -30,9 +29,9 @@ const Body: React.FC = () => {
         address: addresses.Space,
         functionName: 'feedCounter',
       }
-    )
+    );
     setFeedCount(count);
-    let multiquery = []
+    let multiquery = [];
     for (let i = 0; i < count; i++) {
       multiquery.push(
         {
@@ -55,7 +54,7 @@ const Body: React.FC = () => {
         createdAt: parseInt(result.result[2]),
         voteCount: parseInt(result.result[3]),
         userPoints: parseInt(result.result[4]),
-      }
+      };
     });
     setFeed(f);
     console.log(results);
@@ -67,7 +66,6 @@ const Body: React.FC = () => {
 
   const handleSend = async () => {
     if (inputText.trim()) {
-      // 新しい質問をリストの先頭に追加
       try {
         const result = await writeContract(config, {
           abi,
@@ -81,9 +79,9 @@ const Body: React.FC = () => {
         setIsSendingTx(true);
         const transactionReceipt = await waitForTransactionReceipt(config, {
           hash: result,
-        })
+        });
         setIsSendingTx(false);
-        setQuestions([inputText, ...questions]);
+        setQuestions([inputText, ...questions]); // 新しい質問をリストの先頭に追加
         setInputText('');
         setShowPopup(false);
       } catch (error) {
@@ -111,7 +109,7 @@ const Body: React.FC = () => {
               className={styles.textInput}
             />
             {isSendingTx && <p>Sending transaction...</p>}
-            {!isSendingTx && <p> <button onClick={handleSend} className={styles.sendButton}>Send</button></p>}
+            {!isSendingTx && <p><button onClick={handleSend} className={styles.sendButton}>Send</button></p>}
           </div>
         </div>
       )}
