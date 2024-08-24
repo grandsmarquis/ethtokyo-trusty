@@ -36,7 +36,7 @@ const Body = () => {
       args: [address],
     });
 
-    username = username.split(/\s/g)[1];
+    username = username.split(/[^a-zA-Z ]/g)[1];
 
     setUsernameCache({
       ...usernameCache,
