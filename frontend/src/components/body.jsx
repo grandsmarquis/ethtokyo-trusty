@@ -32,10 +32,9 @@ const Body = () => {
     let count = await readContract(config, {
       abi,
       address: addresses.Space,
-      functionName: 'feedCounter',
+      functionName: 'getFeedCount',
     });
     setFeedCount(parseInt(count));
-    count = 1;
     let multiquery = [];
     for (let i = 0; i < count; i++) {
       multiquery.push({
