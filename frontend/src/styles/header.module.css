@@ -60,9 +60,10 @@
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 0px 8px rgba(0, 0, 0, 0.2);
-    opacity: 0;
-    /* transition: opacity 2s ease, transform 2s ease, visibility 2s ease; */
-    z-index: 10;
+    opacity: 1;
+    visibility: visible;
+    z-index: 100000;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .logInWrapper:hover .popup {

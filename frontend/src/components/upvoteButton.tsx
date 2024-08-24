@@ -6,7 +6,7 @@ import { config } from '../wagmi';
 import addresses from '../addresses.json';
 import abi from '../abi.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {  faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 
 
 const Body: React.FC = (props) => {
@@ -38,12 +38,12 @@ const Body: React.FC = (props) => {
     return (
         <span>
             {isSendingTx && <button style={{ marginRight: '10px' }}>Sending</button>}
-            {!isSendingTx &&               <div className={styles.voteSection}>
+            {!isSendingTx && <div className={styles.voteSection}>
                 <button
-                  className={styles.iconButton}
-                  onClick={() => upvote(props.id)}
+                    className={styles.iconButton}
+                    onClick={() => upvote(props.id)}
                 >
-                 👍 
+                    <FontAwesomeIcon icon={faThumbsUp}></FontAwesomeIcon>
                 </button></div>}
         </span>
     );

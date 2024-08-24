@@ -63,16 +63,19 @@ const Body: React.FC = () => {
     console.log(results);
   }
 
-
-
- 
-
   useEffect(() => {
     loadFeed();
   }, []);
 
   const handleUpvote = async (id: number) => {
     await upvote(id);
+  };
+
+  const formatAddress = (address: string) => {
+    if (address.length > 8) {
+      return `${address.slice(0, 6)}...${address.slice(-6)}`;
+    }
+    return address;
   };
 
   return (
@@ -83,16 +86,18 @@ const Body: React.FC = () => {
         <div className={styles.questions}>
           {feed.map((feedItem, i) => (
             <div key={i} className={styles.question}>
-              <div>
-                <h3>{feedItem.content}</h3>
-                <div className={styles.questionMeta}>
-                  Posted by {feedItem.owner} <Moment fromNow>{feedItem.createdAt * 1000}</Moment>
+              <div className={styles.info}>
+                <div className={styles.names}>
+                  <h3>{feedItem.content}</h3>
+                  <div className={styles.questionMeta}>
+                    Posted by {formatAddress(feedItem.owner)} <Moment fromNow>{feedItem.createdAt * 1000}</Moment>
+                  </div>
                 </div>
-
-                <span className={styles.voteCount}>{feedItem.voteCount}</span>
-               
-                <UpvoteButton id={indexToId(i)} item={feedItem} onSuccess={loadFeed} />
-                <DisputeButton id={indexToId(i)} item={feedItem} onSuccess={loadFeed} />
+                <div className={styles.iconButtons}>
+                  <UpvoteButton id={indexToId(i)} item={feedItem} onSuccess={loadFeed} />
+                  <span className={styles.voteCount}>{feedItem.voteCount}</span>
+                  <DisputeButton id={indexToId(i)} item={feedItem} onSuccess={loadFeed} />
+                </div>
               </div>
             </div>
           ))}
@@ -100,9 +105,9 @@ const Body: React.FC = () => {
         <div className={styles.loadMore}>
           <button>Load More</button>
         </div>
-      </div>
-      
-    </main>
+      </div >
+
+    </main >
   );
 };
 
