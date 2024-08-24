@@ -5,15 +5,13 @@ import { config } from '../wagmi';
 import addresses from '../addresses.json';
 import abi from '../abi.json';
 import { writeContract, readContract, readContracts, waitForTransactionReceipt } from '@wagmi/core';
-import Moment from 'react-moment';
 import 'react-tooltip/dist/react-tooltip.css'
-import { Tooltip } from 'react-tooltip'
 
 
 
-import UpvoteButton from './upvoteButton';
-import DownVoteButton from './downvoteButton';
+
 import SubmitModal from './submitModal';
+import FeedItem from './feedItem';
 
 const Body = () => {
   const account = useAccount();
@@ -64,13 +62,6 @@ const Body = () => {
     setFeed(f);
   }
 
-  const formatAddress = (address) => {
-    if (address.length > 8) {
-      return `${address.slice(0, 6)}...${address.slice(-6)}`;
-    }
-    return address;
-  };
-
 
   useEffect(() => {
     loadFeed();
@@ -88,25 +79,7 @@ const Body = () => {
         <div className={styles.questions}>
           {feed.slice().reverse().map((feedItem) => (
             <div key={feedItem.id} className={styles.question}>
-              <div className={styles.info}>
-                <div className={styles.names}>
-                  <h3>{feedItem.content}</h3>
-                  <div className={styles.questionMeta}>
-                    Posted by {formatAddress(feedItem.owner)}
-                  </div>
-                  <div className={styles.questionMeta}>
-                    Posted at <Moment fromNow>{feedItem.createdAt * 1000}</Moment>
-                  </div>
-                </div>
-                <div className={styles.iconButtons}>
-                  <UpvoteButton id={feedItem.id} item={feedItem} onSuccess={loadFeed} />
-                  <a id="clickable"><span className={styles.voteCount}>{feedItem.score}</span></a><Tooltip anchorSelect="#clickable" clickable> <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span>Upvotes: {feedItem.upvotes}</span>
-                    <span>Downvotes: {feedItem.downvotes}</span>
-                  </div></Tooltip>
-                  <DownVoteButton id={feedItem.id} item={feedItem} onSuccess={loadFeed} />
-                </div>
-              </div>
+              <FeedItem feedItem={feedItem} loadFeed={loadFeed} />
             </div>
           ))}
         </div>

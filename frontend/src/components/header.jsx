@@ -14,7 +14,7 @@ const Header = () => {
   const [isHovered, setIsHovered] = useState(false);
   const { address, isConnected } = useAccount();
   const [userInfos, setUserInfos] = useState(null);
-  
+
   async function loadUser() {
     console.log(address);
     let userInfos = await readContract(config, {
@@ -27,7 +27,7 @@ const Header = () => {
   }
   useEffect(async => {
     if (address != null) {
-      loadUser();
+      // loadUser();
     }
   }, [address]);
 
