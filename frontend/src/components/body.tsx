@@ -4,9 +4,8 @@ import { useState, useEffect } from 'react';
 import { config } from '../wagmi';
 import addresses from '../addresses.json';
 import abi from '../abi.json';
-import { writeContract, readContract, readContracts, waitForTransactionReceipt } from '@wagmi/core'
+import { writeContract, readContract, readContracts, waitForTransactionReceipt } from '@wagmi/core';
 import Moment from 'react-moment';
-
 const Body: React.FC = () => {
   const account = useAccount();
   const [showPopup, setShowPopup] = useState(false);
@@ -51,9 +50,9 @@ const Body: React.FC = () => {
         address: addresses.Space,
         functionName: 'feedCounter',
       }
-    )
+    );
     setFeedCount(count);
-    let multiquery = []
+    let multiquery = [];
     for (let i = 0; i < count; i++) {
       multiquery.push(
         {
@@ -76,7 +75,7 @@ const Body: React.FC = () => {
         createdAt: parseInt(result.result[2]),
         voteCount: parseInt(result.result[3]),
         userPoints: parseInt(result.result[4]),
-      }
+      };
     });
     setFeed(f);
     console.log(results);
@@ -88,7 +87,6 @@ const Body: React.FC = () => {
 
   const handleSend = async () => {
     if (inputText.trim()) {
-      // 新しい質問をリストの先頭に追加
       try {
         const result = await writeContract(config, {
           abi,
@@ -102,7 +100,7 @@ const Body: React.FC = () => {
         setIsSendingTx(true);
         const transactionReceipt = await waitForTransactionReceipt(config, {
           hash: result,
-        })
+        });
         setIsSendingTx(false);
         setQuestions([inputText, ...questions]);
         setInputText('');
@@ -134,7 +132,7 @@ const Body: React.FC = () => {
               className={styles.textInput}
             />
             {isSendingTx && <p>Sending transaction...</p>}
-            {!isSendingTx && <p> <button onClick={handleSend} className={styles.sendButton}>Send</button></p>}
+            {!isSendingTx && <p><button onClick={handleSend} className={styles.sendButton}>Send</button></p>}
           </div>
         </div>
       )}
@@ -143,9 +141,15 @@ const Body: React.FC = () => {
         <div className={styles.questions}>
           {feed.map((feedItem, i) => (
             <div key={i} className={styles.question}>
-              <h3>{feedItem.content}</h3>
-              <div className={styles.questionMeta}>
-                Posted <Moment fromNow>{feedItem.createdAt * 1000}</Moment> · Reward: 0 ETH
+              <div>
+                <h3>{feedItem.content}</h3>
+                <div className={styles.questionMeta}>
+                  Posted <Moment fromNow>{feedItem.createdAt * 1000}</Moment> · Reward: 0 ETH
+                </div>
+              </div>
+              <div>
+                <button style={{ marginRight: '10px' }}>yes</button>
+                <button>dispute</button>
               </div>
             </div>
           ))}
@@ -154,7 +158,7 @@ const Body: React.FC = () => {
           <button>Load More</button>
         </div>
       </div>
-    </main>
+    </main >
   );
 };
 
