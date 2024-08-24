@@ -16,6 +16,18 @@ const Body = (props) => {
 
     const { address, isConnected } = useAccount();
     const [didUserVote, setDidUserVote] = useState(false);
+    const [userRank, setUserRank] = useState("");
+
+    const ranks =[
+        "No membership",
+        "Invited",
+        "Not ranked",
+        "Novice",
+        "Intermediate",
+        "Advanced",
+        "Expert",
+        "Master"
+      ]
 
     const formatAddress = (ad) => {
         if (ad.length > 8) {
@@ -23,6 +35,17 @@ const Body = (props) => {
         }
         return ad;
     };
+
+
+    async function getUserInfos() {
+        const userInfos = await readContract(config, {
+            abi,
+            address: addresses.Space,
+            functionName: 'getUser',
+            args: [address],
+        });
+        console.log(userInfos);
+    }
 
     async function checkIfUserVoted(address) {
         if (address == null) 
@@ -38,6 +61,7 @@ const Body = (props) => {
     }
 
     useEffect(() => {
+        getUserInfos();
         checkIfUserVoted(address);
     }, [address]);
 
@@ -47,7 +71,7 @@ const Body = (props) => {
             <div className={styles.names}>
                 <h3>{props.feedItem.content}</h3>
                 <div className={styles.questionMeta}>
-                    Posted by {formatAddress(props.feedItem.owner)}
+                    Posted by {formatAddress(props.feedItem.owner)} <bold>{userRank}</bold>
                 </div>
                 <div className={styles.questionMeta}>
                     Posted at <Moment fromNow>{props.feedItem.createdAt * 1000}</Moment>
