@@ -1,31 +1,33 @@
 import styles from '../styles/body.module.css';
-import { useAccount } from 'wagmi';
 import { useState } from 'react';
 import { writeContract, waitForTransactionReceipt } from '@wagmi/core';
 import { config } from '../wagmi';
 import addresses from '../addresses.json';
 import abi from '../abi.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsDown } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 
 
-const Body: React.FC = (props) => {
+const Body = (props) => {
 
     const [isSendingTx, setIsSendingTx] = useState(false);
 
-    async function upvote(id: number) {
+    async function upvote(id) {
+        if (props.alreadyVoted) {
+            return;
+        }
         console.log(id)
         try {
             let tx = await writeContract(config, {
                 abi,
                 address: addresses.Space,
-                functionName: 'challengeFeed',
+                functionName: 'upvote',
                 args: [parseInt(props.id)],
             });
             setIsSendingTx(true);
             const transactionReceipt = await waitForTransactionReceipt(config, {
                 hash: tx,
-            })
+            });
             props.onSuccess();
         } catch (error) {
             setIsSendingTx(false);
@@ -37,13 +39,18 @@ const Body: React.FC = (props) => {
 
     return (
         <span>
-            {isSendingTx && <button style={{ marginRight: '10px' }}>Sending</button>}
-            {!isSendingTx &&
-                <button
-                    className={styles.iconButton}
-                >
-                    <FontAwesomeIcon icon={faThumbsDown}></FontAwesomeIcon>
-                </button>}
+            {isSendingTx ? (
+                <div className={styles.loader}></div>
+            ) : (
+                <div className={styles.voteSection}>
+                    <button
+                        className={styles.iconButton}
+                        onClick={() => upvote(Number(props.id))}
+                    >
+                        <FontAwesomeIcon icon={faThumbsUp}></FontAwesomeIcon>
+                    </button>
+                </div>
+            )}
         </span>
     );
 };

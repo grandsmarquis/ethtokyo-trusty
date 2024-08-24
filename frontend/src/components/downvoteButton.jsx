@@ -6,20 +6,23 @@ import { config } from '../wagmi';
 import addresses from '../addresses.json';
 import abi from '../abi.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 
 
-const Body: React.FC = (props) => {
+const Body = (props) => {
 
     const [isSendingTx, setIsSendingTx] = useState(false);
 
-    async function upvote(id: number) {
+    async function downvote(id) {
+        if (props.alreadyVoted) {
+            return;
+        }
         console.log(id)
         try {
             let tx = await writeContract(config, {
                 abi,
                 address: addresses.Space,
-                functionName: 'upvote',
+                functionName: 'downvote',
                 args: [parseInt(props.id)],
             });
             setIsSendingTx(true);
@@ -38,13 +41,12 @@ const Body: React.FC = (props) => {
     return (
         <span>
             {isSendingTx && <button style={{ marginRight: '10px' }}>Sending</button>}
-            {!isSendingTx && <div className={styles.voteSection}>
+            {!isSendingTx &&
                 <button
-                    className={styles.iconButton}
-                    onClick={() => upvote(props.id)}
+                    className={styles.iconButton} onClick={() => downvote(props.id)}
                 >
-                    <FontAwesomeIcon icon={faThumbsUp}></FontAwesomeIcon>
-                </button></div>}
+                    <FontAwesomeIcon icon={faThumbsDown}></FontAwesomeIcon>
+                </button>}
         </span>
     );
 };
