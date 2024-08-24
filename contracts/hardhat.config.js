@@ -4,7 +4,7 @@ require("dotenv").config();
 
 let privateKey = process.env.PRIVATE_KEY;
 
-const defaultNetwork = "scroll-sepolia";
+const defaultNetwork = "scroll-dev";
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -14,6 +14,14 @@ module.exports = {
     "scroll-sepolia": {
       url: "https://sepolia-rpc.scroll.io/",
       accounts: [privateKey]
-    }
+    },
+    "scroll-dev": {
+      url: "https://l1sload-rpc.scroll.io",
+      accounts: [privateKey]
+    },
+    sepolia: {
+      url: "https://rpc.sepolia.org",
+      accounts: [privateKey]
+    },
   }
 };

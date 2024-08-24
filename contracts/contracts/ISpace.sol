@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.24;
+pragma solidity 0.8.24;
 
 import "./IRankFunction.sol";
 import "./Common.sol";
@@ -34,6 +34,7 @@ struct Feed {
 }
 
 interface ISpace {
+    function updateRankFunction(IRankFunction _rankFunction) external;
     function highestUpvoterRank(address _user) external view returns (Rank);
     function getFeed(uint256 feedId) external view returns (Feed memory);
     function getFeedCount() external view returns (uint256);

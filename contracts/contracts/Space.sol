@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.24;
+pragma solidity 0.8.24;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./ISpace.sol";
@@ -59,7 +59,8 @@ contract Space is ISpace, Ownable {
     }
 
     function getUserMultiplier(address user) external view returns (uint256) {
-        return rankVoteMultiplier[_calculateRank(user)];
+        UserDetails memory userDetails = _getUpdatedUser(user);
+        return rankVoteMultiplier[userDetails.rank];
     }
 
     function highestUpvoterRank(address _user) external view returns (Rank) {
@@ -72,6 +73,10 @@ contract Space is ISpace, Ownable {
         if (_users[_user].rank == Rank.NON_MEMBER) {
             _users[_user] = UserDetails(0, 0, Rank.INVITED, block.timestamp, msg.sender);
         }
+    }
+
+    function updateRankFunction(IRankFunction _rankFunction) external onlyOwner {
+        _config.rankFunction = _rankFunction;
     }
 
     function register() external verifyInvited {
@@ -120,9 +125,12 @@ contract Space is ISpace, Ownable {
         Rank updatedRank = _calculateRank(user);
 
         if (uint256(userDetails.rank) > uint256(Rank.INVITED)) {
-            updatedRank = userDetails.rank;
+            // user cannot be higher rank than his highest upvoter rank
+            if(uint256(updatedRank) > uint256(_highestUpvoterRank[user])) {
+                updatedRank = _highestUpvoterRank[user];
+            }
 
-            // TODO: check max upvoter rank
+            userDetails.rank = updatedRank;
         }
 
         userDetails.lastUpdated = block.timestamp;

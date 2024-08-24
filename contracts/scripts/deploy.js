@@ -7,8 +7,19 @@
 const hre = require("hardhat");
 
 async function main() {
+    console.log("⏳ Deploying L1EnsResolver contract");
+    let l1EnsResolverDeployment = await hre.ethers.deployContract("L1EnsResolver", [
+        "0x15a5e0Eb61B33b7af0285227D6753A0c318c7967",
+        "0x0635513f179D50A207757E05759CbD106d7dFcE8",
+    ]);
+    await l1EnsResolverDeployment.waitForDeployment();
+    console.log("✅ Deployed L1EnsResolver at:", l1EnsResolverDeployment.target);
 
-    const [main, otherAccount] = await hre.ethers.getSigners();
+    // console.log("node id:", await l1EnsResolverDeployment.getNodeId("0x6F824B3439F522D7A37DE290aAb800993EeaF32D"));
+    // console.log("username:", await l1EnsResolverDeployment.getAddressUsername("0x6F824B3439F522D7A37DE290aAb800993EeaF32D"));
+    // console.log("username:", await l1EnsResolverDeployment._retrieveSlotFromL1("0x15a5e0Eb61B33b7af0285227D6753A0c318c7967", "93187982417923737308899198249154879998230177608241762305889175894456250657999"));
+
+
     console.log("⏳ Deploying Rank Function contract");
     let rankDeployment = await hre.ethers.deployContract("BasicRankFunction", []);
     await rankDeployment.waitForDeployment();
@@ -22,11 +33,12 @@ async function main() {
 
     console.log("⏳ Creating space", "TestSpace");
     let pending = await factoryDeployment.createSpace(
-        "0xBF7B8616e86332BEDdF987C25306e9aF9FF96674",
+        "0x6F824B3439F522D7A37DE290aAb800993EeaF32D",
         [
-            "0xBF7B8616e86332BEDdF987C25306e9aF9FF96674",
+            "0x6F824B3439F522D7A37DE290aAb800993EeaF32D",
             "0x84c03c2F60A472568eAd8E5CA58B641F5785ae30",
             "0xC7Ce6bfe1E69e58557a21Ad6E832d26cA8FB03AE",
+            "0xBAC78374F87D02d3b0d6FAf82d8794201D40b35B",
         ],
         rankAddress,
         "TestSpace 2"
