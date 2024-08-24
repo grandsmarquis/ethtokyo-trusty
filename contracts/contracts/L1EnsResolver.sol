@@ -1,20 +1,31 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.24;
+pragma solidity 0.8.24;
 
+/**
+ * @title L1EnsResolver
+ * @notice This contract is used to resolve the ENS subdomain (username) of an address on L1
+ */
 contract L1EnsResolver {
     address constant L1_SLOAD_ADDRESS = 0x0000000000000000000000000000000000000101;
 
     uint256 constant NODE_ID_SLOT = 1;
     uint256 constant NAMES_SLOT = 6;
 
-    address public immutable ensUser;
+    /// @notice The address of the TrustyEnsUser contract on L1
+    address public immutable trustyEnsUser;
+    /// @notice The address of the ENS NameWrapper contract on L1
     address public immutable nameWrapper;
 
-    constructor(address _ensUser, address _nameWrapper) {
-        ensUser = _ensUser;
+    constructor(address _trustyEnsUser, address _nameWrapper) {
+        trustyEnsUser = _trustyEnsUser;
         nameWrapper = _nameWrapper;
     }
 
+    /**
+     * @notice Get the username of an address
+     * @param user The address to get the username of
+     * @return username The username of the address
+     */
     function getAddressUsername(address user) external view returns (string memory username) {
         bytes32 nodeId = getNodeId(user);
 
@@ -24,29 +35,27 @@ contract L1EnsResolver {
         return _bytes32ToString(abi.decode(ret, (bytes32)));
     }
 
+    /**
+     * @notice Get the subdomain node ID of an address
+     * @param user The address to get the node ID of
+     * @return nodeId The node ID of the address
+     */
     function getNodeId(address user) public view returns (bytes32 nodeId) {
         bytes32 slot = keccak256(abi.encodePacked(uint256(uint160(user)), NODE_ID_SLOT));
-        
-        bytes memory ret = _retrieveSlotFromL1(ensUser, uint256(slot));
+
+        bytes memory ret = _retrieveSlotFromL1(trustyEnsUser, uint256(slot));
         (nodeId) = abi.decode(ret, (bytes32));
     }
 
     function _retrieveSlotFromL1(address l1StorageAddress, uint256 slot) private view returns (bytes memory) {
         (bool success, bytes memory returnValue) = L1_SLOAD_ADDRESS.staticcall(abi.encodePacked(l1StorageAddress, slot));
-        if(!success)
-        {
+        if (!success) {
             revert("L1SLOAD failed");
         }
         return returnValue;
     }
 
     function _bytes32ToString(bytes32 _bytes32) private pure returns (string memory) {
-        bytes memory bytesArray = new bytes(32);
-        for (uint256 i; i < 32; i++) {
-            if(_bytes32[i] == 0x00)
-                break;
-            bytesArray[i] = _bytes32[i];
-        }
-        return string(bytesArray);
+        return string(abi.encodePacked(_bytes32));
     }
 }

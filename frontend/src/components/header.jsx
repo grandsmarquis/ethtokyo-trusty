@@ -3,6 +3,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 import styles from '../styles/header.module.css';
 import { config } from '../wagmi';
 import abi from '../abi.json';
+import resolverAbi from '../resolverAbi.json';
 import addresses from '../addresses.json';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useState, useEffect } from 'react';
@@ -26,6 +27,24 @@ const Header = () => {
     "Expert",
     "Master"
   ]
+
+  async function getUsername(address) {
+    let username = await readContract(config, {
+      abi: resolverAbi,
+      address: addresses.L1EnsResolver,
+      functionName: 'getAddressUsername',
+      args: [address],
+    });
+
+    if (username == "") {
+      return "No username";
+    }
+
+    username = username.split(/\s/g)[1];
+
+    return username;
+  }
+
   async function loadUser() {
     console.log(address);
     let userInfos = await readContract(config, {
@@ -36,6 +55,7 @@ const Header = () => {
     });
     console.log(userInfos);
     setUserInfos({
+      username: await getUsername(address),
       rank: ranks[parseInt(userInfos.rank)],
       points: parseInt(userInfos.points),
       voteCount: parseInt(userInfos.voteCount),
@@ -77,6 +97,7 @@ const Header = () => {
             {isConnected && isHovered && (
               <div className={styles.popup}>
                 <div className={styles.popupContents}>
+                  <p className={styles.popupText}>Username : {userInfos.username}.trusty.eth</p>
                   <p className={styles.popupText}>Rank : {userInfos.rank}</p>
                   <p className={styles.popupText}>Points : {userInfos.points}</p>
                   <p className={styles.popupText}>Voting Power : {userInfos.voteCount}</p>

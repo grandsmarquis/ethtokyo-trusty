@@ -7,14 +7,14 @@
 const hre = require("hardhat");
 
 async function main() {
-    console.log("⏳ Deploying EnsUser contract");
-    let ensUserDeployment = await hre.ethers.deployContract("EnsUser", [
-        "0x0635513f179D50A207757E05759CbD106d7dFcE8",
-        "0x8FADE66B79cC9f707aB26799354482EB93a5B7dD",
-        "0x97f5164d5afc4a063cd1fb07a50165238816e71e71fe861a90e65b5541c4b08e"
+    console.log("⏳ Deploying TrustyEnsUsers contract");
+    let ensUserDeployment = await hre.ethers.deployContract("TrustyEnsUsers", [
+        "0x0635513f179D50A207757E05759CbD106d7dFcE8", // L1EnsResolver
+        "0x8FADE66B79cC9f707aB26799354482EB93a5B7dD", // PublicResolver
+        "0x62f41adad055fba070cfb5e35669b2e7be7f3981f6babb6eb8dfa994bd426be3" // trusty.eth Root ENS node
     ]);
     await ensUserDeployment.waitForDeployment();
-    console.log("✅ Deployed EnsUser at:", ensUserDeployment.target);
+    console.log("✅ Deployed TrustyEnsUsers at:", ensUserDeployment.target);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
