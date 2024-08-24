@@ -8,8 +8,8 @@ const Body: React.FC = () => {
   const [inputText, setInputText] = useState('');
   const [questions, setQuestions] = useState([
     "Did the Snapshot proposal with the id",
-    "Will Pepe have over a $1 Billion dollar market cap on 4/20/2024?",
-    "Qué puntuación darías del 1 al 3 a la reunión de hoy?"
+    "Will Pepe have over a $1 Billion ",
+    "Qué puntuación darías del 1 al 3 ?"
   ]);
 
   const handleSubmit = () => {
@@ -18,7 +18,6 @@ const Body: React.FC = () => {
 
   const handleSend = () => {
     if (inputText.trim()) {
-      // 新しい質問をリストの先頭に追加
       setQuestions([inputText, ...questions]);
       setInputText('');
       setShowPopup(false);
