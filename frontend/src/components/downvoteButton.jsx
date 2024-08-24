@@ -14,6 +14,9 @@ const Body = (props) => {
     const [isSendingTx, setIsSendingTx] = useState(false);
 
     async function downvote(id) {
+        if (props.alreadyVoted) {
+            return;
+        }
         console.log(id)
         try {
             let tx = await writeContract(config, {

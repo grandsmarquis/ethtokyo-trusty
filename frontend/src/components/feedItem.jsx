@@ -7,32 +7,39 @@ import abi from '../abi.json';
 import { readContract } from '@wagmi/core';
 import Moment from 'react-moment';
 import { Tooltip } from 'react-tooltip'
+import { useAccount } from 'wagmi';
 
 import UpvoteButton from './upvoteButton';
 import DownVoteButton from './downvoteButton';
 
 const Body = (props) => {
 
-    const formatAddress = (address) => {
-        if (address.length > 8) {
-            return `${address.slice(0, 6)}...${address.slice(-6)}`;
+    const { address, isConnected } = useAccount();
+    const [didUserVote, setDidUserVote] = useState(false);
+
+    const formatAddress = (ad) => {
+        if (ad.length > 8) {
+            return `${ad.slice(0, 6)}...${ad.slice(-6)}`;
         }
-        return address;
+        return ad;
     };
 
-    async function loadUserInfos(address) {
-        const user = await readContract(config, {
+    async function checkIfUserVoted(address) {
+        if (address == null) 
+            return;
+        const didUserVote = await readContract(config, {
             abi,
             address: addresses.Space,
-            functionName: 'getUserInfos',
-            args: [address],
+            functionName: 'didUserVote',
+            args: [address, props.feedItem.id],
         });
-        console.log(user);
+        console.log(didUserVote);
+        setDidUserVote(didUserVote);
     }
 
     useEffect(() => {
-        // loadUserInfos();
-    }, []);
+        checkIfUserVoted(address);
+    }, [address]);
 
 
     return (
@@ -47,12 +54,12 @@ const Body = (props) => {
                 </div>
             </div>
             <div className={styles.iconButtons}>
-                <UpvoteButton id={props.feedItem.id} item={props.feedItem} onSuccess={props.loadFeed} />
+                <UpvoteButton alreadyVoted={didUserVote} id={props.feedItem.id} item={props.feedItem} onSuccess={props.loadFeed} />
                 <a id="clickable"><span className={styles.voteCount}>{props.feedItem.score}</span></a><Tooltip anchorSelect="#clickable" clickable> <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <span>Upvotes: {props.feedItem.upvotes}</span>
                     <span>Downvotes: {props.feedItem.downvotes}</span>
                 </div></Tooltip>
-                <DownVoteButton id={props.feedItem.id} item={props.feedItem} onSuccess={props.loadFeed} />
+                <DownVoteButton alreadyVoted={didUserVote} id={props.feedItem.id} item={props.feedItem} onSuccess={props.loadFeed} />
             </div>
         </div>
     );
