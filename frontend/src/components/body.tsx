@@ -20,38 +20,27 @@ const Body: React.FC = () => {
   const [feedLoading, setFeedLoading] = useState(false);
   const [feedCount, setFeedCount] = useState(0);
 
-  function indexToId(index: number) {
-    return index;
-  }
-
   async function loadFeed() {
-    let count = await readContract(
-      config,
-      {
-        abi,
-        address: addresses.Space,
-        functionName: 'feedCounter',
-      }
-    );
+    let count = await readContract(config, {
+      abi,
+      address: addresses.Space,
+      functionName: 'feedCounter',
+    });
     setFeedCount(parseInt(count));
     let multiquery = [];
     for (let i = 0; i < count; i++) {
-      multiquery.push(
-        {
-          abi,
-          address: addresses.Space,
-          functionName: 'getFeed',
-          args: [i],
-        }
-      );
+      multiquery.push({
+        abi,
+        address: addresses.Space,
+        functionName: 'getFeed',
+        args: [i],
+      });
     }
-    console.log(multiquery);
-    let results = await readContracts(config, {
-      contracts: multiquery
-    });
+    let results = await readContracts(config, { contracts: multiquery });
 
-    let f = results.map((result) => {
+    let f = results.map((result, index) => {
       return {
+        id: index, // IDを追加
         content: result.result[0],
         owner: result.result[1],
         createdAt: parseInt(result.result[2]),
@@ -60,7 +49,6 @@ const Body: React.FC = () => {
       };
     });
     setFeed(f);
-    console.log(results);
   }
 
   useEffect(() => {
@@ -84,19 +72,22 @@ const Body: React.FC = () => {
 
       <div className={styles.questionBox}>
         <div className={styles.questions}>
-          {feed.map((feedItem, i) => (
-            <div key={i} className={styles.question}>
+          {feed.slice().reverse().map((feedItem) => (
+            <div key={feedItem.id} className={styles.question}>
               <div className={styles.info}>
                 <div className={styles.names}>
                   <h3>{feedItem.content}</h3>
                   <div className={styles.questionMeta}>
-                    Posted by {formatAddress(feedItem.owner)} <Moment fromNow>{feedItem.createdAt * 1000}</Moment>
+                    Posted by {formatAddress(feedItem.owner)}
+                  </div>
+                  <div className={styles.questionMeta}>
+                    Posted at <Moment fromNow>{feedItem.createdAt * 1000}</Moment>
                   </div>
                 </div>
                 <div className={styles.iconButtons}>
-                  <UpvoteButton id={indexToId(i)} item={feedItem} onSuccess={loadFeed} />
+                  <UpvoteButton id={feedItem.id} item={feedItem} onSuccess={loadFeed} />
                   <span className={styles.voteCount}>{feedItem.voteCount}</span>
-                  <DisputeButton id={indexToId(i)} item={feedItem} onSuccess={loadFeed} />
+                  <DisputeButton id={feedItem.id} item={feedItem} onSuccess={loadFeed} />
                 </div>
               </div>
             </div>
@@ -106,7 +97,6 @@ const Body: React.FC = () => {
           <button>Load More</button>
         </div>
       </div >
-
     </main >
   );
 };

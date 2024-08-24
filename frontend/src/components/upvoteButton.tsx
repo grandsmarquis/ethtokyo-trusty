@@ -1,5 +1,4 @@
 import styles from '../styles/body.module.css';
-import { useAccount } from 'wagmi';
 import { useState } from 'react';
 import { writeContract, waitForTransactionReceipt } from '@wagmi/core';
 import { config } from '../wagmi';
@@ -8,13 +7,11 @@ import abi from '../abi.json';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 
-
-const Body: React.FC = (props) => {
-
+const Body: React.FC<{ id: string, onSuccess: () => void }> = (props) => {
     const [isSendingTx, setIsSendingTx] = useState(false);
 
     async function upvote(id: number) {
-        console.log(id)
+        console.log(id);
         try {
             let tx = await writeContract(config, {
                 abi,
@@ -25,7 +22,7 @@ const Body: React.FC = (props) => {
             setIsSendingTx(true);
             const transactionReceipt = await waitForTransactionReceipt(config, {
                 hash: tx,
-            })
+            });
             props.onSuccess();
         } catch (error) {
             setIsSendingTx(false);
@@ -37,14 +34,18 @@ const Body: React.FC = (props) => {
 
     return (
         <span>
-            {isSendingTx && <button style={{ marginRight: '10px' }}>Sending</button>}
-            {!isSendingTx && <div className={styles.voteSection}>
-                <button
-                    className={styles.iconButton}
-                    onClick={() => upvote(props.id)}
-                >
-                    <FontAwesomeIcon icon={faThumbsUp}></FontAwesomeIcon>
-                </button></div>}
+            {isSendingTx ? (
+                <div className={styles.loader}></div>
+            ) : (
+                <div className={styles.voteSection}>
+                    <button
+                        className={styles.iconButton}
+                        onClick={() => upvote(Number(props.id))}
+                    >
+                        <FontAwesomeIcon icon={faThumbsUp}></FontAwesomeIcon>
+                    </button>
+                </div>
+            )}
         </span>
     );
 };
