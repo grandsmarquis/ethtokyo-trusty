@@ -86,7 +86,7 @@ const Body: React.FC = () => {
               <div>
                 <h3>{feedItem.content}</h3>
                 <div className={styles.questionMeta}>
-                  Posted by {feedItem.owner}
+                  Posted by {feedItem.owner} <Moment fromNow>{feedItem.createdAt * 1000}</Moment>
                 </div>
 
                 <span className={styles.voteCount}>{feedItem.voteCount}</span>

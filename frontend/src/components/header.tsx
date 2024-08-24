@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import '@rainbow-me/rainbowkit/styles.css';
 import styles from '../styles/header.module.css';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useState, useEffect } from 'react';
