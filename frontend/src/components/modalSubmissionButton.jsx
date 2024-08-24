@@ -6,13 +6,13 @@ import styles from '../styles/body.module.css';
 
 const Body= () => {
 
-    const [isSubmitModalOpen, setisSubmitModalOpen] = useState(false);
+    const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
     const [submissionContent, setSubmissionContent] = useState('');
 
     return (
         <div>
-            <button className={styles.askButton} onClick={() => setisSubmitModalOpen(true)}>Submit</button>
-            <Modal open={isSubmitModalOpen} onClose={() => setisSubmitModalOpen(false)}>
+            <button className={styles.askButton} onClick={() => setIsSubmitModalOpen(true)}>Submit</button>
+            <Modal open={isSubmitModalOpen} onClose={() => setIsSubmitModalOpen(false)}>
                 <div>
                     <h1>Submit</h1>
                     <textarea  placeholder='What did you achieve?' value={submissionContent} onChange={(e) => setSubmissionContent(e.target.value)}></textarea>
