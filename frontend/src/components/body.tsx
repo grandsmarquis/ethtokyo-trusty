@@ -47,6 +47,17 @@ const Body: React.FC = () => {
     let results = await readContracts(config, {
       contracts: multiquery
     });
+
+    let f = results.map((result) => {
+      return {
+        content: result.result[0],
+        owner: result.result[1],
+        createdAt: parseInt(result.result[2]),
+        voteCount: parseInt(result.result[3]),
+        userPoints: parseInt(result.result[4]),
+      }
+    });
+    setFeed(f);
     console.log(results);
   }
 
@@ -108,9 +119,9 @@ const Body: React.FC = () => {
 
       <div className={styles.questionBox}>
         <div className={styles.questions}>
-          {questions.map((question, i) => (
+          {feed.map((feedItem, i) => (
             <div key={i} className={styles.question}>
-              <h3>{question}</h3>
+              <h3>{feedItem.content}</h3>
               <div className={styles.questionMeta}>
                 Posted {i === 0 ? "Just now" : i < 5 ? "A moment ago" : "Some time ago"} · Reward: 0 ETH
               </div>
