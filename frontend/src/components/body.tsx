@@ -5,7 +5,7 @@ import { config } from '../wagmi';
 import addresses from '../addresses.json';
 import abi from '../abi.json';
 import { writeContract, readContract, readContracts, waitForTransactionReceipt } from '@wagmi/core'
-
+import Moment from 'react-moment';
 
 const Body: React.FC = () => {
   const account = useAccount();
@@ -123,7 +123,7 @@ const Body: React.FC = () => {
             <div key={i} className={styles.question}>
               <h3>{feedItem.content}</h3>
               <div className={styles.questionMeta}>
-                Posted {i === 0 ? "Just now" : i < 5 ? "A moment ago" : "Some time ago"} · Reward: 0 ETH
+                Posted <Moment fromNow>{feedItem.createdAt * 1000}</Moment> · Reward: 0 ETH
               </div>
             </div>
           ))}
