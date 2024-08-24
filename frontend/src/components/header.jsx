@@ -5,7 +5,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useState, useEffect } from 'react';
 import { useAccount } from 'wagmi';
 
-const Header: React.FC = () => {
+const Header = () => {
   const [isHovered, setIsHovered] = useState(false);
   const { address, isConnected } = useAccount();
 

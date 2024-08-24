@@ -6,7 +6,7 @@ import styles from '../styles/body.module.css';
 
 
 
-const Body: React.FC = () => {
+const Body= () => {
 
     const [isSubmitModalOpen, setisSubmitModalOpen] = useState(false);
     const [submissionContent, setSubmissionContent] = useState('');

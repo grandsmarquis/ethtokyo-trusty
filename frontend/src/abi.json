@@ -10,6 +10,11 @@
           "internalType": "string",
           "name": "_name",
           "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_symbol",
+          "type": "string"
         }
       ],
       "stateMutability": "nonpayable",
@@ -137,6 +142,22 @@
         }
       ],
       "name": "ERC721OutOfBoundsIndex",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "enum Rank",
+          "name": "userRank",
+          "type": "uint8"
+        },
+        {
+          "internalType": "enum Rank",
+          "name": "requiredRank",
+          "type": "uint8"
+        }
+      ],
+      "name": "InvalidRank",
       "type": "error"
     },
     {
@@ -308,12 +329,36 @@
     {
       "inputs": [
         {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "feedId",
+          "type": "uint256"
+        }
+      ],
+      "name": "didUserVote",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "didVote",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "uint256",
           "name": "_feedId",
           "type": "uint256"
         }
       ],
-      "name": "challengeFeed",
+      "name": "downvote",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -408,6 +453,46 @@
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "getConfig",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "maxVotes",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "pointsDecayPercent",
+              "type": "uint256"
+            },
+            {
+              "internalType": "contract IRankFunction",
+              "name": "rankFunction",
+              "type": "address"
+            },
+            {
+              "internalType": "enum Rank",
+              "name": "lowestRankToVote",
+              "type": "uint8"
+            },
+            {
+              "internalType": "enum Rank",
+              "name": "lowestRankToInvite",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct Config",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "uint256",
@@ -418,29 +503,114 @@
       "name": "getFeed",
       "outputs": [
         {
-          "internalType": "string",
-          "name": "_content",
-          "type": "string"
-        },
+          "components": [
+            {
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "createdAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "upvotes",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "downvotes",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "content",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct Feed",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getFeedCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
         {
           "internalType": "address",
-          "name": "_owner",
+          "name": "user",
           "type": "address"
-        },
+        }
+      ],
+      "name": "getUser",
+      "outputs": [
         {
-          "internalType": "uint256",
-          "name": "_createdAt",
-          "type": "uint256"
-        },
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "points",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "voteCount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "enum Rank",
+              "name": "rank",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "lastUpdated",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "invitee",
+              "type": "address"
+            }
+          ],
+          "internalType": "struct UserDetails",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
         {
-          "internalType": "uint256",
-          "name": "_upvotes",
-          "type": "uint256"
-        },
+          "internalType": "address",
+          "name": "_user",
+          "type": "address"
+        }
+      ],
+      "name": "highestUpvoterRank",
+      "outputs": [
         {
-          "internalType": "uint256",
-          "name": "_ownerPoints",
-          "type": "uint256"
+          "internalType": "enum Rank",
+          "name": "",
+          "type": "uint8"
         }
       ],
       "stateMutability": "view",
@@ -526,6 +696,13 @@
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "register",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -777,35 +954,36 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "",
+          "name": "userAddress",
           "type": "address"
         }
       ],
-      "name": "userPoints",
+      "name": "users",
       "outputs": [
         {
           "internalType": "uint256",
-          "name": "",
+          "name": "points",
           "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
+        },
+        {
+          "internalType": "uint256",
+          "name": "voteCount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "enum Rank",
+          "name": "rank",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lastUpdated",
+          "type": "uint256"
+        },
         {
           "internalType": "address",
-          "name": "",
+          "name": "invitee",
           "type": "address"
-        }
-      ],
-      "name": "userPointsLastUpdated",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
         }
       ],
       "stateMutability": "view",

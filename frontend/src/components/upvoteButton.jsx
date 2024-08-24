@@ -9,11 +9,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 
 
-const Body: React.FC = (props) => {
+const Body = (props) => {
 
     const [isSendingTx, setIsSendingTx] = useState(false);
 
-    async function upvote(id: number) {
+    async function upvote(id) {
         console.log(id)
         try {
             let tx = await writeContract(config, {

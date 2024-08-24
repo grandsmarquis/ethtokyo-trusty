@@ -7,7 +7,7 @@ import addresses from '../addresses.json';
 import abi from '../abi.json';
 
 
-const Body: React.FC = (props) => {
+const Body = (props) => {
 
     const [isSendingTx, setIsSendingTx] = useState(false);
     const [inputText, setInputText] = useState('');

@@ -8,10 +8,10 @@ import { writeContract, readContract, readContracts, waitForTransactionReceipt }
 import Moment from 'react-moment';
 
 import UpvoteButton from './upvoteButton';
-import DisputeButton from './disputeButton';
+import DownVoteButton from './downvoteButton';
 import SubmitModal from './submitModal';
 
-const Body: React.FC = () => {
+const Body = () => {
   const account = useAccount();
   const [showPopup, setShowPopup] = useState(false);
   const [isSendingTx, setIsSendingTx] = useState(false);
@@ -20,7 +20,7 @@ const Body: React.FC = () => {
   const [feedLoading, setFeedLoading] = useState(false);
   const [feedCount, setFeedCount] = useState(0);
 
-  function indexToId(index: number) {
+  function indexToId(number) {
     return index;
   }
 
@@ -63,19 +63,16 @@ const Body: React.FC = () => {
     console.log(results);
   }
 
+
+
+ 
+
   useEffect(() => {
     loadFeed();
   }, []);
 
-  const handleUpvote = async (id: number) => {
+  const handleUpvote = async (id) => {
     await upvote(id);
-  };
-
-  const formatAddress = (address: string) => {
-    if (address.length > 8) {
-      return `${address.slice(0, 6)}...${address.slice(-6)}`;
-    }
-    return address;
   };
 
   return (
@@ -86,28 +83,24 @@ const Body: React.FC = () => {
         <div className={styles.questions}>
           {feed.map((feedItem, i) => (
             <div key={i} className={styles.question}>
-              <div className={styles.info}>
-                <div className={styles.names}>
-                  <h3>{feedItem.content}</h3>
-                  <div className={styles.questionMeta}>
-                    Posted by {formatAddress(feedItem.owner)} <Moment fromNow>{feedItem.createdAt * 1000}</Moment>
-                  </div>
+              <div>
+                <h3>{feedItem.content}</h3>
+                <div className={styles.questionMeta}>
+                  Posted by {feedItem.owner} <Moment fromNow>{feedItem.createdAt * 1000}</Moment>
                 </div>
-                <div className={styles.iconButtons}>
-                  <UpvoteButton id={indexToId(i)} item={feedItem} onSuccess={loadFeed} />
-                  <span className={styles.voteCount}>{feedItem.voteCount}</span>
-                  <DisputeButton id={indexToId(i)} item={feedItem} onSuccess={loadFeed} />
-                </div>
+
+                <span className={styles.voteCount}>{feedItem.voteCount}</span>
+               
+                <UpvoteButton id={indexToId(i)} item={feedItem} onSuccess={loadFeed} />
+                <DownVoteButton id={indexToId(i)} item={feedItem} onSuccess={loadFeed} />
               </div>
             </div>
           ))}
         </div>
-        <div className={styles.loadMore}>
-          <button>Load More</button>
-        </div>
-      </div >
 
-    </main >
+      </div>
+      
+    </main>
   );
 };
 
