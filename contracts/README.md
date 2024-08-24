@@ -14,4 +14,4 @@ npx hardhat ignition deploy ./ignition/modules/Lock.js
 
 ## Test deployment
 
-Scroll Sepolia Factory address: `0xBF7B8616e86332BEDdF987C25306e9aF9FF96674`
+Scroll Sepolia Factory address: `0x6ab476e320c29BAA8c2B2CA7D3EFa1841dF272BE`

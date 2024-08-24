@@ -20,7 +20,7 @@ const Body = (props) => {
     const handleClosePopup = () => {
         setShowPopup(false);
         setInputText('');
-    }
+    };
 
     const handleSubmitItemToFeed = async () => {
         if (inputText.trim()) {
@@ -29,9 +29,7 @@ const Body = (props) => {
                     abi,
                     address: addresses.Space,
                     functionName: 'addFeed',
-                    args: [
-                        inputText
-                    ],
+                    args: [inputText],
                 });
                 console.log(result);
                 setIsSendingTx(true);
@@ -56,6 +54,7 @@ const Body = (props) => {
             {showPopup &&
                 <div className={styles.popup}>
                     <div className={styles.popupContent}>
+                        <button className={styles.closeButton} onClick={handleClosePopup}>✖</button>
                         <h2>What did you do?</h2>
                         <textarea
                             value={inputText}
@@ -64,7 +63,6 @@ const Body = (props) => {
                         />
                         {isSendingTx && <p>Sending transaction...</p>}
                         {!isSendingTx && <p><button onClick={handleSubmitItemToFeed} className={styles.sendButton}>Send</button></p>}
-                        <button onClick={handleClosePopup} className={styles.sendButton}>Cancel</button>
                     </div>
                 </div>}
         </div>

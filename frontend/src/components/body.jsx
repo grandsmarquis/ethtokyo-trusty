@@ -25,26 +25,21 @@ const Body = () => {
   }
 
   async function loadFeed() {
-    let count = await readContract(
-      config,
-      {
-        abi,
-        address: addresses.Space,
-        functionName: 'feedCounter',
-      }
-    );
+    let count = await readContract(config, {
+      abi,
+      address: addresses.Space,
+      functionName: 'feedCounter',
+    });
     setFeedCount(parseInt(count));
     count = 1;
     let multiquery = [];
     for (let i = 0; i < count; i++) {
-      multiquery.push(
-        {
-          abi,
-          address: addresses.Space,
-          functionName: 'getFeed',
-          args: [i],
-        }
-      );
+      multiquery.push({
+        abi,
+        address: addresses.Space,
+        functionName: 'getFeed',
+        args: [i],
+      });
     }
     console.log(multiquery);
     let results = await readContracts(config, {
@@ -62,7 +57,6 @@ const Body = () => {
       };
     });
     setFeed(f);
-    console.log(results);
   }
 
 
@@ -83,12 +77,23 @@ const Body = () => {
 
       <div className={styles.questionBox}>
         <div className={styles.questions}>
-          {feed.map((feedItem, i) => (
-            <div key={i} className={styles.question}>
-              <div>
-                <h3>{feedItem.content}</h3>
-                <div className={styles.questionMeta}>
-                  Posted by {feedItem.owner} <Moment fromNow>{feedItem.createdAt * 1000}</Moment>
+
+          {feed.slice().reverse().map((feedItem) => (
+            <div key={feedItem.id} className={styles.question}>
+              <div className={styles.info}>
+                <div className={styles.names}>
+                  <h3>{feedItem.content}</h3>
+                  <div className={styles.questionMeta}>
+                    Posted by {formatAddress(feedItem.owner)}
+                  </div>
+                  <div className={styles.questionMeta}>
+                    Posted at <Moment fromNow>{feedItem.createdAt * 1000}</Moment>
+                  </div>
+                </div>
+                <div className={styles.iconButtons}>
+                  <UpvoteButton id={feedItem.id} item={feedItem} onSuccess={loadFeed} />
+                  <span className={styles.voteCount}>{feedItem.voteCount}</span>
+                  <DisputeButton id={feedItem.id} item={feedItem} onSuccess={loadFeed} />
                 </div>
 
                 <span className={styles.voteCount}>{feedItem.voteCount}</span>

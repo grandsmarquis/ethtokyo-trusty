@@ -17,8 +17,22 @@ contract BasicRankFunction is IRankFunction {
             return Rank.INVITED;
         }
 
-        if (userDetails.points < 100) {
+        if (userDetails.points < 2) {
             return Rank.NOVICE;
         }
+
+        if (userDetails.points < 5) {
+            return Rank.INTERMEDIATE;
+        }
+
+        if (userDetails.points < 10) {
+            return Rank.ADVANCED;
+        }
+
+        if (userDetails.points < 20) {
+            return Rank.EXPERT;
+        }
+
+        return Rank.MASTER;
     }
 }

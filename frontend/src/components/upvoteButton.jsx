@@ -1,5 +1,4 @@
 import styles from '../styles/body.module.css';
-import { useAccount } from 'wagmi';
 import { useState } from 'react';
 import { writeContract, waitForTransactionReceipt } from '@wagmi/core';
 import { config } from '../wagmi';
@@ -25,7 +24,7 @@ const Body = (props) => {
             setIsSendingTx(true);
             const transactionReceipt = await waitForTransactionReceipt(config, {
                 hash: tx,
-            })
+            });
             props.onSuccess();
         } catch (error) {
             setIsSendingTx(false);
@@ -37,14 +36,18 @@ const Body = (props) => {
 
     return (
         <span>
-            {isSendingTx && <button style={{ marginRight: '10px' }}>Sending</button>}
-            {!isSendingTx && <div className={styles.voteSection}>
-                <button
-                    className={styles.iconButton}
-                    onClick={() => upvote(props.id)}
-                >
-                    <FontAwesomeIcon icon={faThumbsUp}></FontAwesomeIcon>
-                </button></div>}
+            {isSendingTx ? (
+                <div className={styles.loader}></div>
+            ) : (
+                <div className={styles.voteSection}>
+                    <button
+                        className={styles.iconButton}
+                        onClick={() => upvote(Number(props.id))}
+                    >
+                        <FontAwesomeIcon icon={faThumbsUp}></FontAwesomeIcon>
+                    </button>
+                </div>
+            )}
         </span>
     );
 };
