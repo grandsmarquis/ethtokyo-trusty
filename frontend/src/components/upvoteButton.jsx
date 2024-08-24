@@ -44,7 +44,7 @@ const Body = (props) => {
             ) : (
                 <div className={styles.voteSection}>
                     <button
-                        className={styles.iconButton}
+                        className={`${styles.iconButton} ${props.alreadyVoted ? styles.disabledButton : ''}`}
                         onClick={() => upvote(Number(props.id))}
                     >
                         <FontAwesomeIcon icon={faThumbsUp}></FontAwesomeIcon>
