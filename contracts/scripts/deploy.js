@@ -12,6 +12,7 @@ async function main() {
     console.log("⏳ Deploying Rank Function contract");
     let rankDeployment = await hre.ethers.deployContract("BasicRankFunction", []);
     await rankDeployment.waitForDeployment();
+    let rankAddress = await rankDeployment.getAddress();
     console.log("✅ Deployed rank function at:", rankDeployment.target)
 
     console.log("⏳ Deploying Factory contract");
@@ -22,12 +23,12 @@ async function main() {
     console.log("⏳ Creating space", "TestSpace");
     let pending = await factoryDeployment.createSpace(
         "0xBF7B8616e86332BEDdF987C25306e9aF9FF96674",
-        // [
-        //     "0xBF7B8616e86332BEDdF987C25306e9aF9FF96674",
-        //     "0x84c03c2F60A472568eAd8E5CA58B641F5785ae30",
-        //     "0xC7Ce6bfe1E69e58557a21Ad6E832d26cA8FB03AE",
-        // ],
-        (await rankDeployment.getAddress()),
+        [
+            "0xBF7B8616e86332BEDdF987C25306e9aF9FF96674",
+            "0x84c03c2F60A472568eAd8E5CA58B641F5785ae30",
+            "0xC7Ce6bfe1E69e58557a21Ad6E832d26cA8FB03AE",
+        ],
+        rankAddress,
         "TestSpace",
         "TSP"
     );
