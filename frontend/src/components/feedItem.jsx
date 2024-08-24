@@ -2,6 +2,7 @@ import styles from '../styles/body.module.css';
 
 import { useState, useEffect } from 'react';
 import { config } from '../wagmi';
+
 import addresses from '../addresses.json';
 import abi from '../abi.json';
 import { readContract } from '@wagmi/core';
@@ -78,12 +79,12 @@ const Body = (props) => {
                 </div>
             </div>
             <div className={styles.iconButtons}>
-                <UpvoteButton alreadyVoted={didUserVote} id={props.feedItem.id} item={props.feedItem} onSuccess={props.loadFeed} />
+                <UpvoteButton alreadyVoted={didUserVote || address == props.feedItem.owner} id={props.feedItem.id} item={props.feedItem} onSuccess={props.loadFeed} />
                 <a id="clickable"><span className={styles.voteCount}>{props.feedItem.score}</span></a><Tooltip anchorSelect="#clickable" clickable> <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <span>Upvotes: {props.feedItem.upvotes}</span>
                     <span>Downvotes: {props.feedItem.downvotes}</span>
                 </div></Tooltip>
-                <DownVoteButton alreadyVoted={didUserVote} id={props.feedItem.id} item={props.feedItem} onSuccess={props.loadFeed} />
+                <DownVoteButton alreadyVoted={didUserVote || address == props.feedItem.owner} id={props.feedItem.id} item={props.feedItem} onSuccess={props.loadFeed} />
             </div>
         </div>
     );
