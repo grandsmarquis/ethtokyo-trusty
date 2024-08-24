@@ -2,6 +2,8 @@ import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import {
   sepolia,
 } from 'wagmi/chains';
+import { http } from 'wagmi';
+
 
 export const config = getDefaultConfig({
   appName: 'RainbowKit App',
@@ -9,5 +11,8 @@ export const config = getDefaultConfig({
   chains: [
     sepolia
   ],
+  transports: {
+    [sepolia.id]: http("https://rpc2.sepolia.org"),
+  },
   ssr: true,
 });

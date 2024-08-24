@@ -21,7 +21,7 @@ const Body: React.FC = () => {
   const [feedCount, setFeedCount] = useState(0);
 
   function indexToId(index: number) {
-    return index + 1;
+    return index;
   }
 
   async function loadFeed() {
