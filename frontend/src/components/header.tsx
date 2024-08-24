@@ -9,6 +9,12 @@ const Header: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
   const { address, isConnected } = useAccount();
 
+  useEffect(() => {
+    if (address != null) {
+      console.log(address);
+    }
+  }, [address]);
+
   return (
     <div>
       <Head>
