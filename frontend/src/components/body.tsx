@@ -46,43 +46,46 @@ const Body: React.FC = () => {
   }
 
   async function loadFeed() {
-    let count = await readContract(
-      config,
-      {
+    try {
+      let count = await readContract(config, {
         abi,
         address: addresses.Space,
         functionName: 'feedCounter',
-      }
-    );
-    setFeedCount(count);
-    let multiquery = [];
-    for (let i = 0; i < count; i++) {
-      multiquery.push(
-        {
+      });
+
+      setFeedCount(count);
+      let multiquery = [];
+      for (let i = 0; i < count; i++) {
+        multiquery.push({
           abi,
           address: addresses.Space,
           functionName: 'getFeed',
           args: [i],
-        }
-      );
-    }
-    console.log(multiquery);
-    let results = await readContracts(config, {
-      contracts: multiquery
-    });
+        });
+      }
 
-    let f = results.map((result) => {
-      return {
-        content: result.result[0],
-        owner: result.result[1],
-        createdAt: parseInt(result.result[2]),
-        voteCount: parseInt(result.result[3]),
-        userPoints: parseInt(result.result[4]),
-      };
-    });
-    setFeed(f);
-    console.log(results);
+      let results = await readContracts(config, {
+        contracts: multiquery,
+      });
+
+      let f = results.map((result) => {
+        return {
+          content: result.result[0],
+          owner: result.result[1],
+          createdAt: parseInt(result.result[2]),
+          voteCount: parseInt(result.result[3]),
+          userPoints: parseInt(result.result[4]),
+        };
+      });
+
+      console.log('Fetched feed data:', f); // ここで取得したデータを確認する
+
+      setFeed(f); // 取得したデータで feed ステートを更新
+    } catch (error) {
+      console.error('Error loading feed:', error);
+    }
   }
+
 
   const handleSubmit = () => {
     setShowPopup(true);
@@ -158,10 +161,12 @@ const Body: React.FC = () => {
                 <button
                   className={styles.iconButton}
                   onClick={() => handleUpvote(i)}
+                  style={{ marginBottom: "8px" }}
                 >
                   <FontAwesomeIcon icon={faThumbsUp} />
                 </button>
-                <span className={styles.voteCount}>{feedItem.voteCount}</span>
+                <span className={styles.voteCount}
+                  style={{ marginRight: "10px" }}>{feedItem.voteCount}</span>
                 <button
                   className={styles.iconButton}
                 >
