@@ -97,7 +97,7 @@ const Header = () => {
             {isConnected && isHovered && (
               <div className={styles.popup}>
                 <div className={styles.popupContents}>
-                  <p className={styles.popupText}>Username : {userInfos.username}.trusty.eth</p>
+                  <p className={styles.popupText}>Username : {userInfos.username}.lvlup.eth</p>
                   <p className={styles.popupText}>Rank : {userInfos.rank}</p>
                   <p className={styles.popupText}>Points : {userInfos.points}</p>
                   <p className={styles.popupText}>Voting Power : {userInfos.voteCount}</p>
