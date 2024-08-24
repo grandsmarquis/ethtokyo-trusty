@@ -7,29 +7,21 @@ import "./Common.sol";
 
 contract BasicRankFunction is IRankFunction {
     function calculateRank(address user) external view returns (Rank rank) {
-        UserDetails memory userDetails = ISpace(msg.sender).getUser(user);
+        int256 points = ISpace(msg.sender).getUserPoints(user);
 
-        if (userDetails.rank == Rank.NON_MEMBER) {
-            return Rank.NON_MEMBER;
-        }
-
-        if (userDetails.rank == Rank.INVITED) {
-            return Rank.INVITED;
-        }
-
-        if (userDetails.points < 2) {
+        if (points < 2) {
             return Rank.NOVICE;
         }
 
-        if (userDetails.points < 5) {
+        if (points < 5) {
             return Rank.INTERMEDIATE;
         }
 
-        if (userDetails.points < 10) {
+        if (points < 10) {
             return Rank.ADVANCED;
         }
 
-        if (userDetails.points < 20) {
+        if (points < 20) {
             return Rank.EXPERT;
         }
 

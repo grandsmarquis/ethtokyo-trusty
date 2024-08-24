@@ -38,8 +38,11 @@ interface ISpace {
     function getFeed(uint256 feedId) external view returns (Feed memory);
     function getFeedCount() external view returns (uint256);
     function getUser(address user) external view returns (UserDetails memory);
+    function getUserPoints(address user) external view returns (int256 points);
+    function getUserMultiplier(address user) external view returns (uint256);
     function getConfig() external view returns (Config memory);
-    // function global() external view returns (Global memory);
+    function didUserVote(address user, uint256 feedId) external view returns (bool);
+    function name() external view returns (string memory);
     function inviteUser(address _user) external;
     function register() external;
     function addFeed(string memory _content) external;

@@ -1,41 +1,45 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.24;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./ISpace.sol";
 import "./IRankFunction.sol";
 import "./Common.sol";
 
 
-contract Space is ISpace, ERC721Enumerable, Ownable {
-
-    uint256 public feedCounter;
+contract Space is ISpace, Ownable {
+    string public name;
 
     Config private _config;
 
-    mapping(address userAddress => UserDetails user) public users;
+    mapping(address userAddress => UserDetails user) private _users;
 
     Feed[] private _feeds;
 
     mapping(address user => mapping(uint256 feedId => bool didVote)) public didUserVote;
 
     mapping(address user => Rank highestUpvoterRank) private _highestUpvoterRank;
-    
-    mapping(uint256 => uint256) public feedPoints;
-    mapping(uint256 => uint256) public feedCreatedAt;
-    mapping(uint256 => string) public feedContent;
 
-    constructor(address _owner, address[] memory masters, address rankFunction, string memory _name, string memory _symbol) ERC721(_name, _symbol)
+    mapping(Rank rank => uint256 voteMultiplier) public rankVoteMultiplier;
+
+    constructor(address _owner, address[] memory masters, address rankFunction, string memory _name)
         Ownable(_owner) 
     {
         require(masters.length > 0, "At least one master required");
 
+        name = _name;
+
         for (uint256 i; i < masters.length; i++) {
-            users[masters[i]] = UserDetails(0, 0, Rank.MASTER, block.timestamp, address(this));
+            _users[masters[i]] = UserDetails(0, 0, Rank.MASTER, block.timestamp, address(this));
         }
 
         _config.rankFunction = IRankFunction(rankFunction);
+
+        rankVoteMultiplier[Rank.NOVICE] = 1;
+        rankVoteMultiplier[Rank.INTERMEDIATE] = 2;
+        rankVoteMultiplier[Rank.ADVANCED] = 3;
+        rankVoteMultiplier[Rank.EXPERT] = 4;
+        rankVoteMultiplier[Rank.MASTER] = 5;
     }
 
     function getConfig() external view returns (Config memory) {
@@ -50,6 +54,14 @@ contract Space is ISpace, ERC721Enumerable, Ownable {
         return _getUpdatedUser(user);
     }
 
+    function getUserPoints(address user) external view returns (int256) {
+        return _users[user].points;
+    }
+
+    function getUserMultiplier(address user) external view returns (uint256) {
+        return rankVoteMultiplier[_calculateRank(user)];
+    }
+
     function highestUpvoterRank(address _user) external view returns (Rank) {
         return _highestUpvoterRank[_user];
     }
@@ -57,54 +69,45 @@ contract Space is ISpace, ERC721Enumerable, Ownable {
     function inviteUser(address _user) external verifyRankToInvite {
         // TODO: check number of invites left?
 
-        if (users[_user].rank == Rank.NON_MEMBER) {
-            users[_user] = UserDetails(0, 0, Rank.INVITED, block.timestamp, msg.sender);
+        if (_users[_user].rank == Rank.NON_MEMBER) {
+            _users[_user] = UserDetails(0, 0, Rank.INVITED, block.timestamp, msg.sender);
         }
     }
 
     function register() external verifyInvited {
-        users[msg.sender].rank = Rank.UNRANKED;
+        _users[msg.sender].rank = Rank.UNRANKED;
     }
 
     function addFeed(string memory _content) external verifyRankToPostFeed {
-        uint256 feedId = _feeds.length;
         _feeds.push(Feed(msg.sender, block.timestamp, 0, 0, _content));
-        _safeMint(msg.sender, feedId);
     }
 
-    function upvote(uint256 _feedId) external verifyRankToVote {
-        if (didUserVote[msg.sender][_feedId]) {
-            revert("UserDetails already voted for this feed");
-        }
-
+    function upvote(uint256 _feedId) external verifyRankToVote verifyCanVoteOnFeed(_feedId) updateUser {
         Feed storage feed = _feeds[_feedId];
 
-        feed.upvotes++;
+        uint256 voteMultiplier = rankVoteMultiplier[_users[msg.sender].rank];
+
+        feed.upvotes += voteMultiplier;
 
         // update the highest upvoter rank for the feed owner
-        if (users[msg.sender].rank > _highestUpvoterRank[feed.owner]) {
-            _highestUpvoterRank[feed.owner] = users[msg.sender].rank;
+        if (_users[msg.sender].rank > _highestUpvoterRank[feed.owner]) {
+            _highestUpvoterRank[feed.owner] = _users[msg.sender].rank;
         }
 
-        users[msg.sender].points++;
+        _users[feed.owner].points += int256(voteMultiplier);
 
         didUserVote[msg.sender][_feedId] = true;
     }
 
-    function downvote(uint256 _feedId) external verifyRankToVote {
-        if (didUserVote[msg.sender][_feedId]) {
-            revert("UserDetails already voted for this feed");
-        }
+    function downvote(uint256 _feedId) external verifyRankToVote verifyCanVoteOnFeed(_feedId) updateUser {
+        uint256 voteMultiplier = rankVoteMultiplier[_users[msg.sender].rank];
+        Feed storage feed = _feeds[_feedId];
 
-        _feeds[_feedId].downvotes++;
+        feed.downvotes += voteMultiplier;
 
-        users[msg.sender].points--;
+        _users[feed.owner].points -= int256(voteMultiplier);
 
         didUserVote[msg.sender][_feedId] = true;
-    }
-
-     function _baseURI() internal pure override returns (string memory) {
-        return "https://apitogetimageofnft?id=";
     }
 
     function getFeedCount() public view returns (uint256) {
@@ -112,10 +115,26 @@ contract Space is ISpace, ERC721Enumerable, Ownable {
     }
 
     function _getUpdatedUser(address user) internal view returns (UserDetails memory userDetails) {
-        userDetails = users[user];
+        userDetails = _users[user];
 
-        userDetails.rank = _calculateRank(user);
+        Rank updatedRank = _calculateRank(user);
+
+        if (uint256(userDetails.rank) > uint256(Rank.INVITED)) {
+            updatedRank = userDetails.rank;
+
+            // TODO: check max upvoter rank
+        }
+
         userDetails.lastUpdated = block.timestamp;
+    }
+
+    function _updateUser(address user) internal {
+        _users[user] = _getUpdatedUser(user);
+    }
+
+    function _verifyCanVoteOnFeed(address user, uint256 feedId) internal view {
+        require(!didUserVote[user][feedId], "UserDetails already voted for this feed");
+        require(_feeds[feedId].owner != user, "UserDetails cannot vote on own feed");
     }
 
     function _calculateRank(address user) internal view returns (Rank) {
@@ -133,22 +152,32 @@ contract Space is ISpace, ERC721Enumerable, Ownable {
     }
 
     modifier verifyRankToVote() {
-        _verifyRank(users[msg.sender].rank, _config.lowestRankToVote);
+        _verifyRank(_users[msg.sender].rank, _config.lowestRankToVote);
         _;
     }
 
     modifier verifyRankToPostFeed() {
-        _verifyRank(users[msg.sender].rank, Rank.UNRANKED);
+        _verifyRank(_users[msg.sender].rank, Rank.UNRANKED);
         _;
     }
 
     modifier verifyRankToInvite() {
-        _verifyRank(users[msg.sender].rank, _config.lowestRankToInvite);
+        _verifyRank(_users[msg.sender].rank, _config.lowestRankToInvite);
         _;
     }
 
     modifier verifyInvited() {
-        _verifyRank(users[msg.sender].rank, Rank.INVITED);
+        _verifyRank(_users[msg.sender].rank, Rank.INVITED);
+        _;
+    }
+
+    modifier verifyCanVoteOnFeed(uint256 feedId) {
+        _verifyCanVoteOnFeed(msg.sender, feedId);
+        _;
+    }
+
+    modifier updateUser() {
+        _updateUser(msg.sender);
         _;
     }
 

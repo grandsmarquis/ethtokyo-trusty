@@ -29,8 +29,7 @@ async function main() {
             "0xC7Ce6bfe1E69e58557a21Ad6E832d26cA8FB03AE",
         ],
         rankAddress,
-        "TestSpace",
-        "TSP"
+        "TestSpace 2"
     );
     await pending.wait();
     console.log("✅ Created space", "TestSpace");
