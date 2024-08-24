@@ -5,7 +5,7 @@ import { config } from '../wagmi';
 import addresses from '../addresses.json';
 import abi from '../abi.json';
 import { writeContract, readContract, readContracts, waitForTransactionReceipt } from '@wagmi/core';
-
+import Moment from 'react-moment';
 const Body: React.FC = () => {
   const account = useAccount();
   const [showPopup, setShowPopup] = useState(false);
@@ -81,7 +81,7 @@ const Body: React.FC = () => {
           hash: result,
         });
         setIsSendingTx(false);
-        setQuestions([inputText, ...questions]); // 新しい質問をリストの先頭に追加
+        setQuestions([inputText, ...questions]);
         setInputText('');
         setShowPopup(false);
       } catch (error) {
@@ -118,9 +118,15 @@ const Body: React.FC = () => {
         <div className={styles.questions}>
           {feed.map((feedItem, i) => (
             <div key={i} className={styles.question}>
-              <h3>{feedItem.content}</h3>
-              <div className={styles.questionMeta}>
-                Posted {i === 0 ? "Just now" : i < 5 ? "A moment ago" : "Some time ago"} · Reward: 0 ETH
+              <div>
+                <h3>{feedItem.content}</h3>
+                <div className={styles.questionMeta}>
+                  Posted <Moment fromNow>{feedItem.createdAt * 1000}</Moment> · Reward: 0 ETH
+                </div>
+              </div>
+              <div>
+                <button style={{ marginRight: '10px' }}>yes</button>
+                <button>dispute</button>
               </div>
             </div>
           ))}
@@ -129,7 +135,7 @@ const Body: React.FC = () => {
           <button>Load More</button>
         </div>
       </div>
-    </main>
+    </main >
   );
 };
 
