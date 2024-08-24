@@ -10,9 +10,9 @@ let factorydeployment
 
 async function createFactory(name) {
     console.log("⏳ Creating factory", name);
-    pending = await factorydeployment.createSpace(name);
+    pending = await factorydeployment.createSpace("TestSpace", "TSP");
     await pending.wait();
-    console.log("✅ Created factory", name);
+    console.log("✅ Created space", name);
 }
 
 async function main() {
@@ -22,10 +22,10 @@ async function main() {
     console.log("⏳ Deploying Staking")
     factorydeployment = await hre.ethers.deployContract("Factory", []);
     await factorydeployment.waitForDeployment();
-    console.log("✅ Deployed token at:", factorydeployment.target)
+    console.log("✅ Deployed factory at:", factorydeployment.target)
 
     await createFactory("Space 1");
-    await createFactory("Space 2");
+    // await createFactory("Space 2");
 }
 
 // We recommend this pattern to be able to use async/await everywhere

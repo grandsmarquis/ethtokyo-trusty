@@ -11,3 +11,7 @@ REPORT_GAS=true npx hardhat test
 npx hardhat node
 npx hardhat ignition deploy ./ignition/modules/Lock.js
 ```
+
+## Test deployment
+
+Scroll Sepolia Factory address: `0xBF7B8616e86332BEDdF987C25306e9aF9FF96674`
