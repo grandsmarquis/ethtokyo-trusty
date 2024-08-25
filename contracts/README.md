@@ -14,14 +14,25 @@ Key features of trusty Rank scores:
 
 - The sigma function of Rank distribution can be adjusted to fit your DAO's needs.
 
-## Deploy
+## App
+
+Url: https://ethtokyo-trusty.vercel.app/
+
+### Wallets
+
+- As for PK of wallets or we can register your wallet as a user
+
+## Deployments
 
 ### Sepolia
 
-L1EnsResolver: `0x20fC645Da540143886c1F604517333050812A29e`
+TrustyEnsUsers: [`0xE37881258A5c1dA765a3566F7D2A3EE7f91B8264`](https://sepolia.etherscan.io/address/0xE37881258A5c1dA765a3566F7D2A3EE7f91B8264)
 
 ### Scroll Devnet
 
-BasicRankFunction: `0x82EcDC2cF4dAF0BB7F4De1cEdbAb8d6237EdD340`
-Factory: `0xebcB8dFbb54b311C929A4294ba34620c5a70D67D`
-Space: `0x46F7266d14F400665aD36CBd53Cc8Dd8bAc99482`
+>NOTE: BlockScout doesn't verify the contracts 
+
+L1EnsResolver: [`0x20fC645Da540143886c1F604517333050812A29e`](https://l1sload-blockscout.scroll.io/address/0x20fC645Da540143886c1F604517333050812A29e)
+BasicRankFunction: [`0x82EcDC2cF4dAF0BB7F4De1cEdbAb8d6237EdD340`](https://l1sload-blockscout.scroll.io/address/0x82EcDC2cF4dAF0BB7F4De1cEdbAb8d6237EdD340)
+Factory: [`0xebcB8dFbb54b311C929A4294ba34620c5a70D67D`](https://l1sload-blockscout.scroll.io/address/0xebcB8dFbb54b311C929A4294ba34620c5a70D67D)
+Space: [`0x46F7266d14F400665aD36CBd53Cc8Dd8bAc99482`](https://l1sload-blockscout.scroll.io/address/0x46F7266d14F400665aD36CBd53Cc8Dd8bAc99482)
