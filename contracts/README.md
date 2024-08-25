@@ -1,17 +1,27 @@
-# Sample Hardhat Project
+# trusty
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
+Trusty! is a reputation and reporting tool designed to help DAOs maintain a strong community culture and a high trust environment, in a trustless and decentralised manner. We are applying for the Robust Democracy track, as we believe one of the hardest problems in Plural decentralised democratic systems is maintaining trust for the vote that occurs within your community as it scales in size. The weight of your vote and therefore influence on decisions should be a function of your contributions and reputation within that community, as decisions made that impact the DAO are best decided by those that have the most skin in the game. As projects grow in a decentralised fashion, it is challenging to maintain a culture that befits the original vision. LvlUP! provides a flexible and gamified solution to rewarding those that contribute the most, decided by the most reputable contributors.
 
-Try running some of the following tasks:
+LvlUP! leverages Scroll network's L1SLOAD and ENS subdomains to faciltate the creation of "Ranks" (DAO-specific subdomains, displaying rank internal to the community), based on a reputation score. The reputation score is determined through the use of "Votes" (simple yes/no endorsement of work statements, with onchain transaction execution) which issue "Points" to the reputation score. The higher your Rank, the more Points your Vote issues.
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat ignition deploy ./ignition/modules/Lock.js
-```
+The concept of Ranks allows DAO participants to issue endorsements to each other, based on judgements of Work Statements, giving more voting weights to those with a higher Rank and thus reputation. This can scale to all DAO governance proposals such that higher ranking DAO members can have a higher weighted vote in Proposals. Reputation Score issues ranks based on a Sigma Function, to ensure a better distribution of Ranks among the DAO. 
 
-## Test deployment
+Key features of trusty Rank scores:
 
-Scroll Sepolia Factory address: `0x6ab476e320c29BAA8c2B2CA7D3EFa1841dF272BE`
+- Your Vote casts Points equivalent to your Rank. (i.e. Rank 1 = 1 Point, Rank 4 = 4 points)
+
+- Your Rank issues you a subdomain (i.e. expert.dan.tokyodao1.eth) for display purposes within your DAO
+
+- The sigma function of Rank distribution can be adjusted to fit your DAO's needs.
+
+## Deploy
+
+### Sepolia
+
+L1EnsResolver: `0x20fC645Da540143886c1F604517333050812A29e`
+
+### Scroll Devnet
+
+BasicRankFunction: `0x82EcDC2cF4dAF0BB7F4De1cEdbAb8d6237EdD340`
+Factory: `0xebcB8dFbb54b311C929A4294ba34620c5a70D67D`
+Space: `0x46F7266d14F400665aD36CBd53Cc8Dd8bAc99482`
